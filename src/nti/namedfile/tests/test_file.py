@@ -8,43 +8,83 @@ __docformat__ = "restructuredtext en"
 # pylint: disable=W0212,R0904
 
 from hamcrest import is_
+from hamcrest import none
+from hamcrest import all_of
+from hamcrest import is_not
+from hamcrest import has_key
 from hamcrest import assert_that
+from hamcrest import has_property
+does_not = is_not
 
 import unittest
+
+from nti.externalization.internalization import find_factory_for
+from nti.externalization.internalization import update_from_external_object
 
 from nti.namedfile.file import NamedFile
 
 from nti.namedfile.tests import SharedConfiguringTestLayer
 
-zptlogo = (
-    'GIF89a\x10\x00\x10\x00\xd5\x00\x00\xff\xff\xff\xff\xff\xfe\xfc\xfd\xfd'
-    '\xfa\xfb\xfc\xf7\xf9\xfa\xf5\xf8\xf9\xf3\xf6\xf8\xf2\xf5\xf7\xf0\xf4\xf6'
-    '\xeb\xf1\xf3\xe5\xed\xef\xde\xe8\xeb\xdc\xe6\xea\xd9\xe4\xe8\xd7\xe2\xe6'
-    '\xd2\xdf\xe3\xd0\xdd\xe3\xcd\xdc\xe1\xcb\xda\xdf\xc9\xd9\xdf\xc8\xd8\xdd'
-    '\xc6\xd7\xdc\xc4\xd6\xdc\xc3\xd4\xda\xc2\xd3\xd9\xc1\xd3\xd9\xc0\xd2\xd9'
-    '\xbd\xd1\xd8\xbd\xd0\xd7\xbc\xcf\xd7\xbb\xcf\xd6\xbb\xce\xd5\xb9\xcd\xd4'
-    '\xb6\xcc\xd4\xb6\xcb\xd3\xb5\xcb\xd2\xb4\xca\xd1\xb2\xc8\xd0\xb1\xc7\xd0'
-    '\xb0\xc7\xcf\xaf\xc6\xce\xae\xc4\xce\xad\xc4\xcd\xab\xc3\xcc\xa9\xc2\xcb'
-    '\xa8\xc1\xca\xa6\xc0\xc9\xa4\xbe\xc8\xa2\xbd\xc7\xa0\xbb\xc5\x9e\xba\xc4'
-    '\x9b\xbf\xcc\x98\xb6\xc1\x8d\xae\xbaFgs\x00\x00\x00\x00\x00\x00\x00\x00'
-    '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-    '\x00,\x00\x00\x00\x00\x10\x00\x10\x00\x00\x06z@\x80pH,\x12k\xc8$\xd2f\x04'
-    '\xd4\x84\x01\x01\xe1\xf0d\x16\x9f\x80A\x01\x91\xc0ZmL\xb0\xcd\x00V\xd4'
-    '\xc4a\x87z\xed\xb0-\x1a\xb3\xb8\x95\xbdf8\x1e\x11\xca,MoC$\x15\x18{'
-    '\x006}m\x13\x16\x1a\x1f\x83\x85}6\x17\x1b $\x83\x00\x86\x19\x1d!%)\x8c'
-    '\x866#\'+.\x8ca`\x1c`(,/1\x94B5\x19\x1e"&*-024\xacNq\xba\xbb\xb8h\xbeb'
-    '\x00A\x00;'
-    )
+from nti.externalization.tests import externalizes
+
+GIF_DATAURL = b'data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw=='
 
 class TestNamedFile(unittest.TestCase):
 
-    layer = SharedConfiguringTestLayer
-    
-    def test_restrictions( self ):
-        rn = NamedFile(data=zptlogo, contentType='image/jpeg', filename='zpt.jpg')
-        rn.max_file_size = 1
-        rn.allowed_extensions = ('*.doc',)
-        rn.allowed_mime_types = ('image/jpeg',)
-        assert_that(rn.is_file_size_allowed(), is_(False))
-        assert_that(rn.is_mime_type_allowed(), is_(True))
-        assert_that(rn.is_filename_allowed(), is_(False))
+	layer = SharedConfiguringTestLayer
+
+	def test_restrictions(self):
+		rn = NamedFile(data=GIF_DATAURL, contentType='image/gif', filename='zpt.gif')
+		rn.max_file_size = 1
+		rn.allowed_extensions = ('*.doc',)
+		rn.allowed_mime_types = ('image/jpeg',)
+		assert_that(rn.is_file_size_allowed(), is_(False))
+		assert_that(rn.is_mime_type_allowed(), is_(True))
+		assert_that(rn.is_filename_allowed(), is_(False))
+
+	def test_namedfile_1(self):
+		ext_obj = {
+			'MimeType': 'application/vnd.nextthought.namedfile',
+			'value': GIF_DATAURL,
+			'filename': r'c:\dir\file.gif',
+			'name':'ichigo'
+		}
+
+		assert_that(find_factory_for(ext_obj), is_not(none()))
+
+		internal = find_factory_for(ext_obj)()
+		update_from_external_object(internal, ext_obj, require_updater=True)
+
+		# value changed to URI
+		assert_that(ext_obj, has_key('url'))
+		assert_that(ext_obj, does_not(has_key('value')))
+
+		assert_that(internal, has_property('contentType', 'image/gif'))
+		assert_that(internal, has_property('filename', 'file.gif'))
+		assert_that(internal, has_property('name', 'ichigo'))
+
+		assert_that(internal, externalizes(all_of(has_key('FileMimeType'),
+												  has_key('filename'),
+												  has_key('name'))))
+
+	def test_namedfile_2(self):
+		ext_obj = {
+			'MimeType': 'application/vnd.nextthought.namedfile',
+			'value': GIF_DATAURL,
+			'filename': r'c:\dir\file.gif',
+			'name':'ichigo'
+		}
+
+		assert_that(find_factory_for(ext_obj), is_not(none()))
+
+		internal = find_factory_for(ext_obj)()
+		update_from_external_object(internal, ext_obj, require_updater=True)
+
+		# with the right content time and filename
+		assert_that(internal, has_property('mimeType', 'image/gif'))
+		assert_that(internal, has_property('filename', 'file.gif'))
+		assert_that(internal, has_property('name', 'ichigo'))
+
+		assert_that(internal, externalizes(all_of(has_key('FileMimeType'),
+												  has_key('filename'),
+												  has_key('name'))))

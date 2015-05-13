@@ -68,8 +68,18 @@ class NamedFileMixin(object):
 
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, NamedFile):
-	mimeType = mime_type = u'application/vnd.nextthought.namedfile'
+
+	name = None
+	
+	def __str__(self):
+		return "%s(%s)" % (self.__class__.__name__, self.filename)
+	__repr__ = __str__
 
 @interface.implementer(INamedBlobFile)
 class NamedBlobFile(NamedFileMixin, NamedBlobFile):
-	mimeType = mime_type = u'application/vnd.nextthought.namedblobfile'
+
+	name = None
+	
+	def __str__(self):
+		return "%s(%s)" % (self.__class__.__name__, self.filename)
+	__repr__ = __str__

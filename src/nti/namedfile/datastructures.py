@@ -86,8 +86,8 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 	def toExternalObject(self, mergeFrom=None, **kwargs):
 		ext_dict = super(NamedFileObjectIO, self).toExternalObject(**kwargs)
 		the_file = self._ext_replacement()
+		ext_dict['MimeType'] = self.MIME_TYPE
 		ext_dict['name'] = the_file.name or None
 		ext_dict['filename'] = the_file.filename or None
 		ext_dict['FileMimeType'] = str(the_file.contentType or u'')
-		ext_dict['MimeType'] = getattr(the_file,'mimeType', None) or self.MIME_TYPE
 		return ext_dict
