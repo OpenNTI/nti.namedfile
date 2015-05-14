@@ -44,9 +44,6 @@ class NamedFileObjectIO(InterfaceObjectIO):
 	def _ext_replacement(self):
 		return self._ext_self
 
-	def _ext_all_possible_keys(self):
-		return ()
-
 	def _ext_mimeType(self, obj):
 		return u'application/vnd.nextthought.namedfile'
 
@@ -106,6 +103,7 @@ class NamedFileObjectIO(InterfaceObjectIO):
 		ext_dict['filename'] = the_file.filename or None
 		ext_dict['MimeType'] = self._ext_mimeType(the_file)
 		ext_dict['FileMimeType'] = str(the_file.contentType or u'')
+		ext_dict['contentType'] = ext_dict['FileMimeType']
 		return ext_dict
 
 @component.adapter(INamedImage)
