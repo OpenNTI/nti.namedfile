@@ -28,7 +28,9 @@ from .interfaces import INamedBlobImage
 class NamedFileMixin(object):
 
 	name = None
-	
+	createdTime = 0
+	lastModified = 0
+
 	max_file_size = None
 	allowed_extensions = ('*',)
 	allowed_mime_types = ("*/*",)
@@ -75,19 +77,19 @@ class NamedFileMixin(object):
 	def __str__(self):
 		return "%s(%s)" % (self.__class__.__name__, self.filename)
 	__repr__ = __str__
-	
+
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, PloneNamedFile):
 	mimeType = mime_type = u'application/vnd.nextthought.namedfile'
-	
+
 @interface.implementer(INamedImage)
 class NamedImage(NamedFileMixin, PloneNamedImage):
 	mimeType = mime_type = u'application/vnd.nextthought.namedimage'
-	
+
 @interface.implementer(INamedBlobFile)
 class NamedBlobFile(NamedFileMixin, PloneNamedBlobFile):
 	mimeType = mime_type = u'application/vnd.nextthought.namedblobfile'
-	
+
 @interface.implementer(INamedBlobImage)
 class NamedBlobImage(NamedFileMixin, PloneNamedBlobImage):
 	mimeType = mime_type = u'application/vnd.nextthought.namedblobimage'

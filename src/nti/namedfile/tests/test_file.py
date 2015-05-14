@@ -53,7 +53,6 @@ class TestNamedFile(unittest.TestCase):
 		factory = find_factory_for(ext_obj)
 		assert_that(factory, is_not(none()))
 
-		from IPython.core.debugger import Tracer; Tracer()()
 		internal = factory()
 		update_from_external_object(internal, ext_obj, require_updater=True)
 
