@@ -69,6 +69,7 @@ class NamedFileObjectIO(InterfaceObjectIO):
 		# start update
 		updated = super(NamedFileObjectIO, self).updateFromExternalObject(parsed, *args, **kwargs)
 		ext_self = self._ext_replacement()
+
 		url = parsed.get('url') or parsed.get('value')
 		name = parsed.get('name') or parsed.get('Name')
 		if url:
@@ -76,6 +77,7 @@ class NamedFileObjectIO(InterfaceObjectIO):
 			ext_self.contentType = data_url.mimeType
 			ext_self.data = data_url.data
 			updated = True
+
 		if 'filename' in parsed:
 			ext_self.filename = parsed['filename']
 			# some times we get full paths
@@ -84,9 +86,15 @@ class NamedFileObjectIO(InterfaceObjectIO):
 				ext_self.filename = name_found
 			name = ext_self.filename if not name else name
 			updated = True
-		if 'FileMimeType' in parsed:
-			ext_self.contentType = bytes(parsed['FileMimeType'])
-			updated = True
+
+		# contentType
+		for name in ('FileMimeType', 'contentType', 'type'):
+			if name in parsed:
+				ext_self.contentType = bytes(parsed[name])
+				updated = True
+				break
+
+		# file id
 		if name is not None:
 			ext_self.name = name
 		return updated
