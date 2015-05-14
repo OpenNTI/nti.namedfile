@@ -18,8 +18,10 @@ from nti.common.dataurl import DataURL
 
 from nti.coremetadata.schema import DataURI
 
-from nti.externalization.datastructures import InterfaceObjectIO
+from nti.externalization.interfaces import LocatedExternalDict
 from nti.externalization.interfaces import StandardExternalFields
+
+from nti.externalization.datastructures import InterfaceObjectIO
 
 from .interfaces import INamedFile
 from .interfaces import INamedImage
@@ -97,13 +99,13 @@ class NamedFileObjectIO(InterfaceObjectIO):
 		return updated
 
 	def toExternalObject(self, mergeFrom=None, **kwargs):
-		ext_dict = super(NamedFileObjectIO, self).toExternalObject(**kwargs)
+		ext_dict = LocatedExternalDict()
 		the_file = self._ext_replacement()
+		contentType = the_file.contentType
 		ext_dict['name'] = the_file.name or None
 		ext_dict['filename'] = the_file.filename or None
 		ext_dict['MimeType'] = self._ext_mimeType(the_file)
-		ext_dict['FileMimeType'] = str(the_file.contentType or u'')
-		ext_dict['contentType'] = ext_dict['FileMimeType']
+		ext_dict['contentType'] = ext_dict['FileMimeType'] = str(contentType or u'')
 		return ext_dict
 
 @component.adapter(INamedImage)
