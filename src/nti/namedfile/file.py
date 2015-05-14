@@ -80,16 +80,16 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, PloneNamedFile):
-	mimeType = mime_type = u'application/vnd.nextthought.namedfile'
+	pass
 
 @interface.implementer(INamedImage)
 class NamedImage(NamedFileMixin, PloneNamedImage):
-	mimeType = mime_type = u'application/vnd.nextthought.namedimage'
+	pass
 
 @interface.implementer(INamedBlobFile)
 class NamedBlobFile(NamedFileMixin, PloneNamedBlobFile):
-	mimeType = mime_type = u'application/vnd.nextthought.namedblobfile'
+	pass
 
 @interface.implementer(INamedBlobImage)
 class NamedBlobImage(NamedFileMixin, PloneNamedBlobImage):
-	mimeType = mime_type = u'application/vnd.nextthought.namedblobimage'
+	pass

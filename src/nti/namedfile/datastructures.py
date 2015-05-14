@@ -48,7 +48,7 @@ class NamedFileObjectIO(InterfaceObjectIO):
 		return ()
 
 	def _ext_mimeType(self, obj):
-		return obj.mimeType
+		return u'application/vnd.nextthought.namedfile'
 
 	def is_internal_fileref(self, parsed):
 		return parsed.get(OID) or parsed.get(NTIID)
@@ -87,16 +87,16 @@ class NamedFileObjectIO(InterfaceObjectIO):
 			name = ext_self.filename if not name else name
 			updated = True
 
+		# file id
+		if name is not None:
+			ext_self.name = name
+
 		# contentType
 		for name in ('FileMimeType', 'contentType', 'type'):
 			if name in parsed:
 				ext_self.contentType = bytes(parsed[name])
 				updated = True
 				break
-
-		# file id
-		if name is not None:
-			ext_self.name = name
 		return updated
 
 	def toExternalObject(self, mergeFrom=None, **kwargs):
@@ -110,15 +110,27 @@ class NamedFileObjectIO(InterfaceObjectIO):
 
 @component.adapter(INamedImage)
 class NamedImageObjectIO(NamedFileObjectIO):
+
 	_ext_iface_upper_bound = INamedImage
+
+	def _ext_mimeType(self, obj):
+		return u'application/vnd.nextthought.namedimage'
 
 @component.adapter(INamedBlobFile)
 class NamedBlobFileObjectIO(NamedFileObjectIO):
+
 	_ext_iface_upper_bound = INamedBlobFile
+
+	def _ext_mimeType(self, obj):
+		return u'application/vnd.nextthought.namedblobfile'
 
 @component.adapter(INamedBlobImage)
 class NamedBlobImageObjectIO(NamedFileObjectIO):
+
 	_ext_iface_upper_bound = INamedBlobImage
+
+	def _ext_mimeType(self, obj):
+		return u'application/vnd.nextthought.namedblobimage'
 
 def BaseFactory(ext_obj, file_factory, image_factory=None):
 	factory = file_factory

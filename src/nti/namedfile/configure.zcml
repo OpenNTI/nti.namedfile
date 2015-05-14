@@ -19,6 +19,21 @@
 			 provides="nti.externalization.interfaces.IMimeObjectFactory"
 			 name="application/vnd.nextthought.namedfile" />
 
+	<adapter factory=".datastructures.NamedImageFactory"
+			 for="dolmen.builtins.IDict"
+			 provides="nti.externalization.interfaces.IMimeObjectFactory"
+			 name="application/vnd.nextthought.namedimage" />
+			
+	<adapter factory=".datastructures.NamedBlobFileFactory"
+			 for="dolmen.builtins.IDict"
+			 provides="nti.externalization.interfaces.IMimeObjectFactory"
+			 name="application/vnd.nextthought.namedblobfile" />
+ 
+ 	<adapter factory=".datastructures.NamedBlobImageFactory"
+			 for="dolmen.builtins.IDict"
+			 provides="nti.externalization.interfaces.IMimeObjectFactory"
+			 name="application/vnd.nextthought.namedblobimage" />
+
 	<adapter factory=".datastructures.NamedFileObjectIO"
 			 for=".interfaces.INamedFile"  />
 
