@@ -18,10 +18,9 @@ from nti.common.dataurl import DataURL
 
 from nti.coremetadata.schema import DataURI
 
-from nti.externalization.interfaces import LocatedExternalDict
 from nti.externalization.interfaces import StandardExternalFields
 
-from nti.externalization.datastructures import InterfaceObjectIO
+from nti.externalization.datastructures import AbstractDynamicObjectIO
 
 from .interfaces import INamedFile
 from .interfaces import INamedImage
@@ -36,15 +35,25 @@ from .file import NamedBlobImage
 
 OID = StandardExternalFields.OID
 NTIID = StandardExternalFields.NTIID
+MIMETYPE = StandardExternalFields.MIMETYPE
 
 @component.adapter(INamedFile)
-class NamedFileObjectIO(InterfaceObjectIO):
+class NamedFileObjectIO(AbstractDynamicObjectIO):
 
-	_ext_iface_upper_bound = INamedFile
-	_excluded_in_ivars_ = {'url', 'value'}.union(InterfaceObjectIO._excluded_in_ivars_)
+	_excluded_in_ivars_  = {'url', 'value'}.union(AbstractDynamicObjectIO._excluded_in_ivars_)
+	_excluded_out_ivars_ = {'data', 'size', 'contentType', 
+							'allowed_mime_types', 'allowed_extensions', 'max_file_size'}
+	_excluded_out_ivars_ = _excluded_out_ivars_.union(AbstractDynamicObjectIO._excluded_out_ivars_)
+	
+	def __init__( self, ext_self ):
+		super(NamedFileObjectIO,self).__init__()
+		self._ext_self = ext_self
 
 	def _ext_replacement(self):
 		return self._ext_self
+
+	def _ext_all_possible_keys(self):
+		return ()															
 
 	def _ext_mimeType(self, obj):
 		return u'application/vnd.nextthought.namedfile'
@@ -99,19 +108,17 @@ class NamedFileObjectIO(InterfaceObjectIO):
 		return updated
 
 	def toExternalObject(self, mergeFrom=None, **kwargs):
-		ext_dict = LocatedExternalDict()
+		ext_dict = super(NamedFileObjectIO, self).toExternalObject(**kwargs)
 		the_file = self._ext_replacement()
 		contentType = the_file.contentType
 		ext_dict['name'] = the_file.name or None
 		ext_dict['filename'] = the_file.filename or None
-		ext_dict['MimeType'] = self._ext_mimeType(the_file)
+		ext_dict[MIMETYPE] = self._ext_mimeType(the_file)
 		ext_dict['contentType'] = ext_dict['FileMimeType'] = str(contentType or u'')
 		return ext_dict
 
 @component.adapter(INamedImage)
 class NamedImageObjectIO(NamedFileObjectIO):
-
-	_ext_iface_upper_bound = INamedImage
 
 	def _ext_mimeType(self, obj):
 		return u'application/vnd.nextthought.namedimage'
@@ -119,15 +126,11 @@ class NamedImageObjectIO(NamedFileObjectIO):
 @component.adapter(INamedBlobFile)
 class NamedBlobFileObjectIO(NamedFileObjectIO):
 
-	_ext_iface_upper_bound = INamedBlobFile
-
 	def _ext_mimeType(self, obj):
 		return u'application/vnd.nextthought.namedblobfile'
 
 @component.adapter(INamedBlobImage)
 class NamedBlobImageObjectIO(NamedFileObjectIO):
-
-	_ext_iface_upper_bound = INamedBlobImage
 
 	def _ext_mimeType(self, obj):
 		return u'application/vnd.nextthought.namedblobimage'

@@ -10,6 +10,8 @@
 	<include package="zope.component" />
 	<include package="zope.security" />
 
+	<include package="plone.namedfile" file="z3c-blobfile.zcml" />
+	
 	<!-- Externalization -->
 	<include package="nti.externalization" file="meta.zcml" />
 	<include package="nti.externalization" />
@@ -45,5 +47,15 @@
 		
 	<adapter factory=".datastructures.NamedBlobImageObjectIO"
 			 for=".interfaces.INamedBlobImage"  />
-	 
+	
+	<configure zcml:condition="have devmode">
+		<utility provides="zope.mimetype.interfaces.IMimeTypeGetter"
+				 component="zope.mimetype.typegetter.smartMimeTypeGuesser" />
+
+		<utility provides="zope.mimetype.interfaces.ICharsetGetter"
+				 component="zope.mimetype.typegetter.charsetGetter" />
+
+		<adapter factory="zope.mimetype.contentinfo.ContentInfo"/>
+	</configure>
+
 </configure>
