@@ -26,7 +26,7 @@ setup(
 	description="NTI NamedFile support",
 	long_description=codecs.open('README.rst', encoding='utf-8').read(),
 	license='Proprietary',
-	keywords='Datasever Core Interfaces',
+	keywords='NTI named file support',
 	classifiers=[
 		'Intended Audience :: Developers',
 		'Natural Language :: English',
