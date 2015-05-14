@@ -23,6 +23,9 @@ from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
 from plone.namedfile.interfaces import INamedBlobFile as IPloneNamedBlobFile
 from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
 
+from . import monkey as plonefile_zopefile_patch_on_import
+plonefile_zopefile_patch_on_import.patch()
+
 class INamedMixin(interface.Interface):
 
 	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
