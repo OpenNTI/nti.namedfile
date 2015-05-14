@@ -16,9 +16,12 @@
 	<include package="nti.externalization" file="meta.zcml" />
 	<include package="nti.externalization" />
 	
-	<ext:registerMimeFactories module=".file" />
-	
+	<adapter factory=".datastructures.NamedFileFactory"
+			 for="dolmen.builtins.IDict"
+			 provides="nti.externalization.interfaces.IMimeObjectFactory"
+			 name="application/vnd.nextthought.namedfile" />
+
 	<adapter factory=".datastructures.NamedFileObjectIO"
 			 for=".interfaces.INamedFile"  />
-			 
+
 </configure>

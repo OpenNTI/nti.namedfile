@@ -14,23 +14,37 @@ from zope import interface
 
 from zope.file.upload import nameFinder
 
+from nti.common.dataurl import DataURL
+
 from nti.dataserver.core.schema import DataURI
 
+from nti.externalization.interfaces import IInternalObjectIO
 from nti.externalization.interfaces import StandardExternalFields
 from nti.externalization.datastructures import AbstractDynamicObjectIO
 
 from .interfaces import INamedFile
+from .interfaces import INamedImage
+from .interfaces import INamedBlobFile
+from .interfaces import INamedBlobImage
 from .interfaces import IInternalFileRef
+
+from .file import NamedFile
+from .file import NamedImage
+from .file import NamedBlobFile
+from .file import NamedBlobImage
 
 OID = StandardExternalFields.OID
 NTIID = StandardExternalFields.NTIID
 
+_main_excluded_in_ivars_ = AbstractDynamicObjectIO._excluded_in_ivars_
+
 @component.adapter(INamedFile)
+@interface.implementer(IInternalObjectIO)
 class NamedFileObjectIO(AbstractDynamicObjectIO):
 
 	MIME_TYPE = u'application/vnd.nextthought.namedfile'
 
-	_excluded_in_ivars_ = AbstractDynamicObjectIO._excluded_in_ivars_ + {'url', 'value'}
+	_excluded_in_ivars_ = _main_excluded_in_ivars_.union({'url', 'value'})
 
 	def __init__(self, ext_self):
 		super(NamedFileObjectIO, self).__init__()
@@ -91,3 +105,45 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 		ext_dict['filename'] = the_file.filename or None
 		ext_dict['FileMimeType'] = str(the_file.contentType or u'')
 		return ext_dict
+
+@component.adapter(INamedImage)
+class NamedImageObjectIO(NamedFileObjectIO):
+	MIME_TYPE = u'application/vnd.nextthought.namedimage'
+
+@component.adapter(INamedBlobFile)
+class NamedBlobFileObjectIO(NamedFileObjectIO):
+	MIME_TYPE = u'application/vnd.nextthought.namedblobfile'
+	
+@component.adapter(INamedBlobImage)
+class NamedBlobImageObjectIO(NamedFileObjectIO):
+	MIME_TYPE = u'application/vnd.nextthought.namedblobimage'
+	
+def BaseFactory(ext_obj, file_factory, image_factory=None):
+	factory = file_factory
+	image_factory = image_factory or file_factory
+	url = ext_obj.get('url') or ext_obj.get('value')
+	contentType = ext_obj.get('FileMimeType')
+	if url and url.startswith(b'data:'):
+		ext_obj['url'] = DataURL(url)
+		ext_obj.pop('value', None)
+		if ext_obj['url'].mimeType.startswith('image/'):
+			factory = image_factory
+	elif contentType and contentType.lower().startswith('image/'):
+		factory = image_factory
+	return factory
+
+def NamedFileFactory(ext_obj):
+	result = BaseFactory(ext_obj, NamedFile, NamedImage)
+	return  result
+
+def NamedImageFactory(ext_obj):
+	result = BaseFactory(ext_obj, NamedImage, NamedImage)
+	return  result
+
+def NamedBlobFileFactory(ext_obj):
+	result = BaseFactory(ext_obj, NamedBlobFile, NamedBlobImage)
+	return  result
+
+def NamedBlobImageFactory(ext_obj):
+	result = BaseFactory(ext_obj, NamedBlobImage, NamedBlobImage)
+	return  result

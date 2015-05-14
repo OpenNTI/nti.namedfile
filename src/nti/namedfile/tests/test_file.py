@@ -39,10 +39,10 @@ class TestNamedFile(unittest.TestCase):
 		rn.allowed_extensions = ('*.doc',)
 		rn.allowed_mime_types = ('image/jpeg',)
 		assert_that(rn.is_file_size_allowed(), is_(False))
-		assert_that(rn.is_mime_type_allowed(), is_(True))
+		assert_that(rn.is_mime_type_allowed(), is_(False))
 		assert_that(rn.is_filename_allowed(), is_(False))
 
-	def test_namedfile_1(self):
+	def test_namedfile(self):
 		ext_obj = {
 			'MimeType': 'application/vnd.nextthought.namedfile',
 			'value': GIF_DATAURL,
@@ -50,9 +50,11 @@ class TestNamedFile(unittest.TestCase):
 			'name':'ichigo'
 		}
 
-		assert_that(find_factory_for(ext_obj), is_not(none()))
+		factory = find_factory_for(ext_obj)
+		assert_that(factory, is_not(none()))
 
-		internal = find_factory_for(ext_obj)()
+		from IPython.core.debugger import Tracer; Tracer()()
+		internal = factory()
 		update_from_external_object(internal, ext_obj, require_updater=True)
 
 		# value changed to URI
@@ -60,28 +62,6 @@ class TestNamedFile(unittest.TestCase):
 		assert_that(ext_obj, does_not(has_key('value')))
 
 		assert_that(internal, has_property('contentType', 'image/gif'))
-		assert_that(internal, has_property('filename', 'file.gif'))
-		assert_that(internal, has_property('name', 'ichigo'))
-
-		assert_that(internal, externalizes(all_of(has_key('FileMimeType'),
-												  has_key('filename'),
-												  has_key('name'))))
-
-	def test_namedfile_2(self):
-		ext_obj = {
-			'MimeType': 'application/vnd.nextthought.namedfile',
-			'value': GIF_DATAURL,
-			'filename': r'c:\dir\file.gif',
-			'name':'ichigo'
-		}
-
-		assert_that(find_factory_for(ext_obj), is_not(none()))
-
-		internal = find_factory_for(ext_obj)()
-		update_from_external_object(internal, ext_obj, require_updater=True)
-
-		# with the right content time and filename
-		assert_that(internal, has_property('mimeType', 'image/gif'))
 		assert_that(internal, has_property('filename', 'file.gif'))
 		assert_that(internal, has_property('name', 'ichigo'))
 

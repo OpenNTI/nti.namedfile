@@ -15,14 +15,20 @@ from zope import interface
 
 from zope.mimetype.interfaces import mimeTypeConstraint
 
-from plone.namedfile.file import NamedFile
-from plone.namedfile.file import NamedBlobFile
+from plone.namedfile.file import NamedFile as PloneNamedFile
+from plone.namedfile.file import NamedImage as PloneNamedImage
+from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
+from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
 from .interfaces import INamedFile
+from .interfaces import INamedImage
 from .interfaces import INamedBlobFile
+from .interfaces import INamedBlobImage
 
 class NamedFileMixin(object):
 
+	name = None
+	
 	max_file_size = None
 	allowed_extensions = ('*',)
 	allowed_mime_types = ("*/*",)
@@ -66,20 +72,22 @@ class NamedFileMixin(object):
 								'*' in self.allowed_extensions))
 		return result
 
+	def __str__(self):
+		return "%s(%s)" % (self.__class__.__name__, self.filename)
+	__repr__ = __str__
+	
 @interface.implementer(INamedFile)
-class NamedFile(NamedFileMixin, NamedFile):
-
-	name = None
+class NamedFile(NamedFileMixin, PloneNamedFile):
+	mimeType = mime_type = u'application/vnd.nextthought.namedfile'
 	
-	def __str__(self):
-		return "%s(%s)" % (self.__class__.__name__, self.filename)
-	__repr__ = __str__
-
+@interface.implementer(INamedImage)
+class NamedImage(NamedFileMixin, PloneNamedImage):
+	mimeType = mime_type = u'application/vnd.nextthought.namedimage'
+	
 @interface.implementer(INamedBlobFile)
-class NamedBlobFile(NamedFileMixin, NamedBlobFile):
-
-	name = None
+class NamedBlobFile(NamedFileMixin, PloneNamedBlobFile):
+	mimeType = mime_type = u'application/vnd.nextthought.namedblobfile'
 	
-	def __str__(self):
-		return "%s(%s)" % (self.__class__.__name__, self.filename)
-	__repr__ = __str__
+@interface.implementer(INamedBlobImage)
+class NamedBlobImage(NamedFileMixin, PloneNamedBlobImage):
+	mimeType = mime_type = u'application/vnd.nextthought.namedblobimage'

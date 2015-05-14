@@ -19,9 +19,11 @@ from nti.schema.field import ValidText as Text
 from nti.coremetadata.interfaces import ILastModified
 
 from plone.namedfile.interfaces import INamedFile as IPloneNamedFile
+from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
 from plone.namedfile.interfaces import INamedBlobFile as IPloneNamedBlobFile
+from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
 
-class INamedFile(IPloneNamedFile, ILastModified):
+class INamedMixin(interface.Interface):
 
 	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
 
@@ -59,7 +61,16 @@ class INamedFile(IPloneNamedFile, ILastModified):
 		the allowed list of extensions.
 		"""
 
+class INamedFile(IPloneNamedFile, ILastModified, INamedMixin):
+	pass
+	
+class INamedImage(IPloneNamedImage, ILastModified, INamedMixin):
+	pass
+
 class INamedBlobFile(IPloneNamedBlobFile, INamedFile):
+	pass
+
+class INamedBlobImage(IPloneNamedBlobImage, INamedImage):
 	pass
 
 class IInternalFileRef(interface.Interface):
