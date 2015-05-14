@@ -15,7 +15,7 @@ import unittest
 import plone.namedfile.file as nfile
 import plone.namedfile.interfaces as nfile_interfaces
 
-from nti.monkey.plonefile_zopefile_patch_on_import import patch
+from nti.namedfile.monkey import patch
 
 from nti.namedfile.tests import SharedConfiguringTestLayer
 
