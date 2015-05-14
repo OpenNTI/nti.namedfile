@@ -20,16 +20,16 @@ from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
+from nti.coremetadata.mixins import CreatedAndModifiedTimeMixin
+
 from .interfaces import INamedFile
 from .interfaces import INamedImage
 from .interfaces import INamedBlobFile
 from .interfaces import INamedBlobImage
 
-class NamedFileMixin(object):
+class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 	name = None
-	createdTime = 0
-	lastModified = 0
 
 	max_file_size = None
 	allowed_extensions = ('*',)

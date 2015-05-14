@@ -52,6 +52,7 @@ setup(
 		'zope.schema',
 		'zope.security',
 		'nti.common',
+		'nti.coremetadata',
 		'nti.externalization',
 		'nti.schema'
 	],

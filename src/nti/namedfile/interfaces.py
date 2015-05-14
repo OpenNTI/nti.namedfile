@@ -63,7 +63,7 @@ class INamedMixin(interface.Interface):
 
 class INamedFile(IPloneNamedFile, ILastModified, INamedMixin):
 	pass
-	
+
 class INamedImage(IPloneNamedImage, ILastModified, INamedMixin):
 	pass
 

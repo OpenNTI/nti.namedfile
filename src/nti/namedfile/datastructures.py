@@ -35,13 +35,11 @@ from .file import NamedBlobImage
 OID = StandardExternalFields.OID
 NTIID = StandardExternalFields.NTIID
 
-_main_excluded_in_ivars_ = InterfaceObjectIO._excluded_in_ivars_
-
 @component.adapter(INamedFile)
 class NamedFileObjectIO(InterfaceObjectIO):
 
 	_ext_iface_upper_bound = INamedFile
-	_excluded_in_ivars_ = _main_excluded_in_ivars_.union({'url', 'value'})
+	_excluded_in_ivars_ = {'url', 'value'}.union(InterfaceObjectIO._excluded_in_ivars_)
 
 	def _ext_replacement(self):
 		return self._ext_self
