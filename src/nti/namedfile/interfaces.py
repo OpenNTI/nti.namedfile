@@ -26,9 +26,7 @@ from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
 from . import monkey as plonefile_zopefile_patch_on_import
 plonefile_zopefile_patch_on_import.patch()
 
-class INamedMixin(interface.Interface):
-
-	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
+class IFileConstraints(interface.Interface):
 
 	allowed_mime_types = IndexedIterable(title="Mime types that are accepted",
 										 min_length=1,
@@ -64,10 +62,13 @@ class INamedMixin(interface.Interface):
 		the allowed list of extensions.
 		"""
 
-class INamedFile(IPloneNamedFile, ILastModified, INamedMixin):
+class INamedFileConstraint(IFileConstraints):
+	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
+
+class INamedFile(IPloneNamedFile, ILastModified, INamedFileConstraint):
 	pass
 
-class INamedImage(IPloneNamedImage, ILastModified, INamedMixin):
+class INamedImage(IPloneNamedImage, ILastModified, INamedFileConstraint):
 	pass
 
 class INamedBlobFile(IPloneNamedBlobFile, INamedFile):
