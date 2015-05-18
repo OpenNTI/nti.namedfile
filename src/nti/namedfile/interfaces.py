@@ -62,20 +62,17 @@ class IFileConstraints(interface.Interface):
 		the allowed list of extensions.
 		"""
 
-class INamedFileConstraint(IFileConstraints):
+class INamedFile(IPloneNamedFile, ILastModified):
 	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
 
-class INamedFile(IPloneNamedFile, ILastModified, INamedFileConstraint):
-	pass
-
-class INamedImage(IPloneNamedImage, ILastModified, INamedFileConstraint):
-	pass
+class INamedImage(IPloneNamedImage, ILastModified):
+	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
 
 class INamedBlobFile(IPloneNamedBlobFile, INamedFile):
-	pass
+	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
 
 class INamedBlobImage(IPloneNamedBlobImage, INamedImage):
-	pass
+	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
 
 class IInternalFileRef(interface.Interface):
 	"""
