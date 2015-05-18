@@ -21,6 +21,8 @@ from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
+from nti.common.property import alias
+
 from nti.coremetadata.mixins import CreatedAndModifiedTimeMixin
 
 from .interfaces import INamedFile
@@ -37,8 +39,10 @@ class FileConstraints(object):
 	allowed_extensions = ('*',)
 	allowed_mime_types = ("*/*",)
 
+	file = alias('_v_file')
+	
 	def __init__(self, context=None): # make it adpater
-		self.file = context
+		self._v_file = context
 
 	def is_file_size_allowed(self, size=None):
 		size = self.file.getSize() if not size else size
