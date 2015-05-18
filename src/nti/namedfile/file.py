@@ -45,12 +45,12 @@ class FileConstraints(object):
 		self._v_file = context
 
 	def is_file_size_allowed(self, size=None):
-		size = self.file.getSize() if not size else size
-		result = not self.max_file_size or size <= self.max_file_size
+		size = self.file.getSize() if self.file is not None and size is None else None
+		result = not self.max_file_size or (size is not None and size <= self.max_file_size)
 		return result
 
 	def is_mime_type_allowed(self, mime_type=None):
-		mime_type = mime_type or self.file.contentType
+		mime_type = mime_type or getattr(self.file, 'contentType', None)
 		mime_type = mime_type.lower() if mime_type else mime_type
 		if (not mime_type  # No input
 			or not mimeTypeConstraint(mime_type)  # Invalid
@@ -78,7 +78,7 @@ class FileConstraints(object):
 		return False
 
 	def is_filename_allowed(self, filename=None):
-		filename = filename or self.file.filename
+		filename = filename or getattr(self.file, 'filename', None)
 		ext = os.path.splitext(filename.lower())[1] if filename else None
 		result = (filename and (ext in self.allowed_extensions or \
 								'*' in self.allowed_extensions))
