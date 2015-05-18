@@ -41,8 +41,7 @@ MIMETYPE = StandardExternalFields.MIMETYPE
 class NamedFileObjectIO(AbstractDynamicObjectIO):
 
 	_excluded_in_ivars_  = {'url', 'value'}.union(AbstractDynamicObjectIO._excluded_in_ivars_)
-	_excluded_out_ivars_ = {'data', 'size', 'contentType', 
-							'allowed_mime_types', 'allowed_extensions', 'max_file_size'}
+	_excluded_out_ivars_ = {'data', 'size', 'contentType'}
 	_excluded_out_ivars_ = _excluded_out_ivars_.union(AbstractDynamicObjectIO._excluded_out_ivars_)
 	
 	def __init__( self, ext_self ):

@@ -12,6 +12,10 @@
 
 	<include package="plone.namedfile" file="z3c-blobfile.zcml" />
 	
+	<adapter factory=".file.FileConstraints"
+			 for=".interfaces.INamedFile"
+			 provides=".interfaces.IFileConstraints" />
+			 
 	<!-- Externalization -->
 	<include package="nti.externalization" file="meta.zcml" />
 	<include package="nti.externalization" />

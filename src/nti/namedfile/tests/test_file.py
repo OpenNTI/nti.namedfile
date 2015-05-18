@@ -22,6 +22,7 @@ from nti.externalization.internalization import find_factory_for
 from nti.externalization.internalization import update_from_external_object
 
 from nti.namedfile.file import NamedFile
+from nti.namedfile.file import FileConstraints
 
 from nti.namedfile.tests import SharedConfiguringTestLayer
 
@@ -34,7 +35,8 @@ class TestNamedFile(unittest.TestCase):
 	layer = SharedConfiguringTestLayer
 
 	def test_restrictions(self):
-		rn = NamedFile(data=GIF_DATAURL, contentType='image/gif', filename='zpt.gif')
+		named = NamedFile(data=GIF_DATAURL, contentType='image/gif', filename='zpt.gif')
+		rn = FileConstraints(named)
 		rn.max_file_size = 1
 		rn.allowed_extensions = ('*.doc',)
 		rn.allowed_mime_types = ('image/jpeg',)

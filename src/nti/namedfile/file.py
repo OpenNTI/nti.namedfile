@@ -11,6 +11,7 @@ logger = __import__('logging').getLogger(__name__)
 
 import os
 
+from zope import component
 from zope import interface
 
 from zope.mimetype.interfaces import mimeTypeConstraint
@@ -26,21 +27,26 @@ from .interfaces import INamedFile
 from .interfaces import INamedImage
 from .interfaces import INamedBlobFile
 from .interfaces import INamedBlobImage
+from .interfaces import IFileConstraints
 
-class NamedFileMixin(CreatedAndModifiedTimeMixin):
-
-	name = None
+@component.adapter(INamedFile)
+@interface.implementer(IFileConstraints)
+class FileConstraints(object):
 
 	max_file_size = None
 	allowed_extensions = ('*',)
 	allowed_mime_types = ("*/*",)
 
+	def __init__(self, context=None): # make it adpater
+		self.file = context
+
 	def is_file_size_allowed(self, size=None):
-		size = self.getSize() if not size else size
-		return not self.max_file_size or size <= self.max_file_size
+		size = self.file.getSize() if not size else size
+		result = not self.max_file_size or size <= self.max_file_size
+		return result
 
 	def is_mime_type_allowed(self, mime_type=None):
-		mime_type = mime_type or self.contentType
+		mime_type = mime_type or self.file.contentType
 		mime_type = mime_type.lower() if mime_type else mime_type
 		if (not mime_type  # No input
 			or not mimeTypeConstraint(mime_type)  # Invalid
@@ -68,14 +74,18 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 		return False
 
 	def is_filename_allowed(self, filename=None):
-		filename = filename or self.filename
+		filename = filename or self.file.filename
 		ext = os.path.splitext(filename.lower())[1] if filename else None
 		result = (filename and (ext in self.allowed_extensions or \
 								'*' in self.allowed_extensions))
 		return result
 
+class NamedFileMixin(CreatedAndModifiedTimeMixin):
+
+	name = None
+	
 	def __str__(self):
-		return "%s(%s)" % (self.__class__.__name__, self.filename)
+		return "%s(%s)" % (self.__class__.__name__, self.name)
 	__repr__ = __str__
 
 @interface.implementer(INamedFile)
