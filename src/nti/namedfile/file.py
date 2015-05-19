@@ -45,7 +45,7 @@ class FileConstraints(object):
 		self._v_file = context
 
 	def is_file_size_allowed(self, size=None):
-		size = self.file.getSize() if self.file is not None and size is None else None
+		size = self.file.getSize() if self.file is not None and size is None else size
 		result = not self.max_file_size or (size is not None and size <= self.max_file_size)
 		return result
 
