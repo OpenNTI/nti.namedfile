@@ -91,10 +91,6 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 	def __str__(self):
 		return "%s(%s)" % (self.__class__.__name__, self.name)
 	__repr__ = __str__
-	
-	@property
-	def size(self):
-		return self.getSize()
 
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, PloneNamedFile):
