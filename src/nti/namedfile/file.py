@@ -21,8 +21,6 @@ from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
-from nti.common.property import alias
-
 from nti.coremetadata.mixins import CreatedAndModifiedTimeMixin
 
 from .interfaces import INamedFile
@@ -35,22 +33,22 @@ from .interfaces import IFileConstraints
 @interface.implementer(IFileConstraints)
 class FileConstraints(object):
 
+	_v_file = None
+	
 	max_file_size = None
 	allowed_extensions = ('*',)
 	allowed_mime_types = ("*/*",)
-
-	file = alias('_v_file')
 	
 	def __init__(self, context=None): # make it adpater
 		self._v_file = context
 
 	def is_file_size_allowed(self, size=None):
-		size = self.file.getSize() if self.file is not None and size is None else size
+		size = self._v_file.getSize() if self._v_file is not None and size is None else size
 		result = not self.max_file_size or (size is not None and size <= self.max_file_size)
 		return result
 
 	def is_mime_type_allowed(self, mime_type=None):
-		mime_type = mime_type or getattr(self.file, 'contentType', None)
+		mime_type = mime_type or getattr(self._v_file, 'contentType', None)
 		mime_type = mime_type.lower() if mime_type else mime_type
 		if (not mime_type  # No input
 			or not mimeTypeConstraint(mime_type)  # Invalid
@@ -78,7 +76,7 @@ class FileConstraints(object):
 		return False
 
 	def is_filename_allowed(self, filename=None):
-		filename = filename or getattr(self.file, 'filename', None)
+		filename = filename or getattr(self._v_file, 'filename', None)
 		ext = os.path.splitext(filename.lower())[1] if filename else None
 		result = (filename and (ext in self.allowed_extensions or \
 								'*' in self.allowed_extensions))
