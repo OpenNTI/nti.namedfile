@@ -40,7 +40,6 @@ MIMETYPE = StandardExternalFields.MIMETYPE
 @component.adapter(INamedFile)
 class NamedFileObjectIO(AbstractDynamicObjectIO):
 
-	_excluded_in_ivars_  = {'url', 'value'}.union(AbstractDynamicObjectIO._excluded_in_ivars_)
 	_excluded_out_ivars_ = {'data', 'size', 'contentType'}
 	_excluded_out_ivars_ = _excluded_out_ivars_.union(AbstractDynamicObjectIO._excluded_out_ivars_)
 	
@@ -70,9 +69,10 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 			# NTIID/OID is provided save the reference
 			interface.alsoProvides(ext_self, IInternalFileRef)
 			ext_self.reference = parsed.get(OID) or parsed.get(NTIID)
-			# then remove those fields to avoid any hint of a copy
+			# then remove excluded in fields to avoid any hint of a copy
 			for name in self._excluded_in_ivars_:
 				parsed.pop(name, None)
+
 		# start update
 		updated = super(NamedFileObjectIO, self).updateFromExternalObject(parsed, *args, **kwargs)
 		ext_self = self._ext_replacement()
