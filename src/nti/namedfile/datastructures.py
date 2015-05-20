@@ -72,6 +72,11 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 			# then remove excluded in fields to avoid any hint of a copy
 			for name in self._excluded_in_ivars_:
 				parsed.pop(name, None)
+			# remove invalid url/value data spec
+			for name in ('url', 'value'):
+				value = parsed.get(name)
+				if not DataURI.is_valid_data_uri(value):
+					parsed.pop(name, None)
 
 		# start update
 		updated = super(NamedFileObjectIO, self).updateFromExternalObject(parsed, *args, **kwargs)
