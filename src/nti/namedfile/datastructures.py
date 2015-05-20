@@ -62,6 +62,17 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 	# For symmetry with the other response types,
 	# we accept either 'url' or 'value'
 
+	def _ext_remove_excluded(self, parsed):
+		# then remove excluded in fields to avoid any hint of a copy
+		for name in self._excluded_in_ivars_:
+			parsed.pop(name, None)
+
+		# remove invalid url/value data spec
+		for name in ('url', 'value'):
+			value = parsed.get(name)
+			if not DataURI.is_valid_data_uri(value):
+				parsed.pop(name, None)
+					
 	def updateFromExternalObject(self, parsed, *args, **kwargs):
 		ext_self = self._ext_replacement()
 		if self.is_internal_fileref(parsed):
@@ -70,13 +81,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 			interface.alsoProvides(ext_self, IInternalFileRef)
 			ext_self.reference = parsed.get(OID) or parsed.get(NTIID)
 			# then remove excluded in fields to avoid any hint of a copy
-			for name in self._excluded_in_ivars_:
-				parsed.pop(name, None)
-			# remove invalid url/value data spec
-			for name in ('url', 'value'):
-				value = parsed.get(name)
-				if not DataURI.is_valid_data_uri(value):
-					parsed.pop(name, None)
+			self._ext_remove_excluded(parsed)
 
 		# start update
 		updated = super(NamedFileObjectIO, self).updateFromExternalObject(parsed, *args, **kwargs)
