@@ -42,16 +42,16 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 
 	_excluded_out_ivars_ = {'data', 'size', 'contentType'}
 	_excluded_out_ivars_ = _excluded_out_ivars_.union(AbstractDynamicObjectIO._excluded_out_ivars_)
-	
-	def __init__( self, ext_self ):
-		super(NamedFileObjectIO,self).__init__()
+
+	def __init__(self, ext_self):
+		super(NamedFileObjectIO, self).__init__()
 		self._ext_self = ext_self
 
 	def _ext_replacement(self):
 		return self._ext_self
 
 	def _ext_all_possible_keys(self):
-		return ()															
+		return ()
 
 	def _ext_mimeType(self, obj):
 		return u'application/vnd.nextthought.namedfile'
@@ -72,7 +72,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 			value = parsed.get(name)
 			if not DataURI.is_valid_data_uri(value):
 				parsed.pop(name, None)
-					
+
 	def updateFromExternalObject(self, parsed, *args, **kwargs):
 		ext_self = self._ext_replacement()
 		if self.is_internal_fileref(parsed):

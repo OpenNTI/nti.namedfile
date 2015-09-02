@@ -34,12 +34,12 @@ from .interfaces import IFileConstraints
 class FileConstraints(object):
 
 	_v_file = None
-	
+
 	max_file_size = None
 	allowed_extensions = ('*',)
 	allowed_mime_types = ("*/*",)
-	
-	def __init__(self, context=None): # make it adpater
+
+	def __init__(self, context=None):  # make it adpater
 		self._v_file = context
 
 	def is_file_size_allowed(self, size=None):
@@ -85,7 +85,7 @@ class FileConstraints(object):
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 	name = None
-	
+
 	def __str__(self):
 		return "%s(%s)" % (self.__class__.__name__, self.name)
 	__repr__ = __str__

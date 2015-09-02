@@ -19,7 +19,7 @@ zfile = zfile
 
 import plone.namedfile.file as nfile
 import plone.namedfile.utils as nutils
-import plone.namedfile.interfaces as nfile_interfaces
+from plone.namedfile.interfaces import IFile
 
 from zope import component
 
@@ -34,10 +34,9 @@ def _patch():
 	# declares the streaming interfaces open and openDetached while
 	# plone's only declares the buffered 'data' interface, though
 	# the blob-versions implement open and openDetached
-	if nfile_interfaces.IFile.__iro__ != (nfile_interfaces.IFile, interfaces.Interface,):
+	if IFile.__iro__ != (IFile, interfaces.Interface,):
 		raise ImportError("Internals of plone.namedfile have changed")
-
-	nfile_interfaces.IFile.__bases__ = (zfile_interfaces.IFile,)
+	IFile.__bases__ = (zfile_interfaces.IFile,)
 
 	# They are almost compatible, with a few minor differences we
 	# fix up here.

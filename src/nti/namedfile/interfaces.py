@@ -7,6 +7,9 @@
 from __future__ import print_function, unicode_literals, absolute_import, division
 __docformat__ = "restructuredtext en"
 
+from . import monkey as plonefile_zopefile_patch_on_import
+plonefile_zopefile_patch_on_import.patch()
+
 from zope import interface
 
 from zope.mimetype.interfaces import mimeTypeConstraint
@@ -22,9 +25,6 @@ from plone.namedfile.interfaces import INamedFile as IPloneNamedFile
 from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
 from plone.namedfile.interfaces import INamedBlobFile as IPloneNamedBlobFile
 from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
-
-from . import monkey as plonefile_zopefile_patch_on_import
-plonefile_zopefile_patch_on_import.patch()
 
 class IFileConstraints(interface.Interface):
 
