@@ -12,14 +12,14 @@ logger = __import__('logging').getLogger(__name__)
 from cStringIO import StringIO
 
 from zope.file.upload import nameFinder
-import zope.file.interfaces as zfile_interfaces
+from zope.file import interfaces as zfile_interfaces
 
-import zope.file.file as zfile
+from zope.file import file as zfile
 zfile = zfile
 
-import plone.namedfile.file as nfile
-import plone.namedfile.utils as nutils
-from plone.namedfile.interfaces import IFile
+from plone.namedfile import file as nfile
+from plone.namedfile import utils as nutils
+from plone.namedfile.interfaces import IFile as INFile
 
 from zope import component
 
@@ -34,9 +34,9 @@ def _patch():
 	# declares the streaming interfaces open and openDetached while
 	# plone's only declares the buffered 'data' interface, though
 	# the blob-versions implement open and openDetached
-	if IFile.__iro__ != (IFile, interfaces.Interface,):
+	if INFile.__iro__ != (INFile, interfaces.Interface,):
 		raise ImportError("Internals of plone.namedfile have changed")
-	IFile.__bases__ = (zfile_interfaces.IFile,)
+	INFile.__bases__ = (zfile_interfaces.IFile,)
 
 	# They are almost compatible, with a few minor differences we
 	# fix up here.
