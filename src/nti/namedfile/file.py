@@ -29,11 +29,6 @@ from .interfaces import INamedBlobFile
 from .interfaces import INamedBlobImage
 from .interfaces import IFileConstraints
 
-def _tx_string(s):
-	if s and isinstance(s, unicode):
-		s = s.encode('utf-8')
-	return s
-
 @component.adapter(INamedFile)
 @interface.implementer(IFileConstraints)
 class FileConstraints(object):
@@ -92,7 +87,7 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 	name = None
 
 	def __str__(self):
-		return "%s(%s)" % (self.__class__.__name__, _tx_string(self.name))
+		return "%s(%r)" % (self.__class__.__name__, self.name)
 	__repr__ = __str__
 
 @interface.implementer(INamedFile)
