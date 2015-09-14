@@ -9,6 +9,8 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
+import re
+
 from zope import component
 from zope import interface
 
@@ -37,10 +39,8 @@ OID = StandardExternalFields.OID
 NTIID = StandardExternalFields.NTIID
 MIMETYPE = StandardExternalFields.MIMETYPE
 
-def _tx_string(s):
-	if s and isinstance(s, unicode):
-		s = s.encode('utf-8')
-	return s
+def safe_filename(s):
+	return re.sub('[^-a-zA-Z0-9_.() ]+', '', s) if s else s
 
 @component.adapter(INamedFile)
 class NamedFileObjectIO(AbstractDynamicObjectIO):
@@ -93,7 +93,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 		ext_self = self._ext_replacement()
 
 		url = parsed.get('url') or parsed.get('value')
-		name = _tx_string(parsed.get('name') or parsed.get('Name'))
+		name = parsed.get('name') or parsed.get('Name')
 		if url:
 			data_url = DataURI(__name__='url').fromUnicode(url)
 			ext_self.contentType = data_url.mimeType
@@ -101,11 +101,11 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 			updated = True
 
 		if 'filename' in parsed:
-			ext_self.filename = _tx_string(parsed['filename'])
+			ext_self.filename = safe_filename(parsed['filename'])
 			# some times we get full paths
 			name_found = nameFinder(ext_self)
 			if name_found:
-				ext_self.filename = _tx_string(name_found)
+				ext_self.filename = safe_filename(name_found)
 			name = ext_self.filename if not name else name
 			updated = True
 
