@@ -48,7 +48,7 @@ class TestNamedFile(unittest.TestCase):
 		ext_obj = {
 			'MimeType': 'application/vnd.nextthought.namedfile',
 			'value': GIF_DATAURL,
-			'filename': r'c:\dir\file.gif',
+			'filename': r'file.gif',
 			'name':'ichigo'
 		}
 
