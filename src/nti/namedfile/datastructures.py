@@ -24,16 +24,16 @@ from nti.externalization.interfaces import StandardExternalFields
 
 from nti.externalization.datastructures import AbstractDynamicObjectIO
 
+from .file import NamedFile
+from .file import NamedImage
+from .file import NamedBlobFile
+from .file import NamedBlobImage
+
 from .interfaces import INamedFile
 from .interfaces import INamedImage
 from .interfaces import INamedBlobFile
 from .interfaces import INamedBlobImage
 from .interfaces import IInternalFileRef
-
-from .file import NamedFile
-from .file import NamedImage
-from .file import NamedBlobFile
-from .file import NamedBlobImage
 
 OID = StandardExternalFields.OID
 NTIID = StandardExternalFields.NTIID
