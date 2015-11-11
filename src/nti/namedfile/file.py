@@ -106,7 +106,6 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 		if not name:
 			match = _nameFinder.match(name)
 			self.name = match.group(2) if match else None
-		return match
 		
 	def __str__(self):
 		return "%s(%r)" % (self.__class__.__name__, self.name)
