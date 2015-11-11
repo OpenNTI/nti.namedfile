@@ -15,6 +15,8 @@ import re
 from zope import component
 from zope import interface
 
+from zope.cachedescriptors.property import readproperty
+
 from zope.mimetype.interfaces import mimeTypeConstraint
 
 from plone.namedfile.file import NamedFile as PloneNamedFile
@@ -92,7 +94,7 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 	name = None
 	
 	__parent__ = None
-	__name__ = alias('name')
+
 	content_type = alias('contentType')
 	
 	def __init__(self, data='', contentType='', filename=None, name=None):
@@ -104,6 +106,10 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 			match = _nameFinder.match(filename)
 			self.name = match.group(2) if match else None
 		
+	@readproperty
+	def __name__(self):
+		return self.name
+
 	def __str__(self):
 		return "%s(%r)" % (self.__class__.__name__, self.name)
 	__repr__ = __str__
