@@ -10,6 +10,7 @@ __docformat__ = "restructuredtext en"
 logger = __import__('logging').getLogger(__name__)
 
 import os
+import re
 
 from zope import component
 from zope import interface
@@ -86,6 +87,8 @@ class FileConstraints(object):
 								'*' in self.allowed_extensions))
 		return result
 
+_nameFinder = re.compile(r'(.*[\\/:])?(.+)')
+
 @interface.implementer(IContained)
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
@@ -93,7 +96,18 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 	
 	__parent__ = None
 	__name__ = alias('name')
+	content_type = alias('contentType')
 	
+	def __init__(self, data='', contentType='', filename=None, name=None):
+		super(NamedFileMixin, self).__init__(data=data,
+											 contentType=contentType, 
+											 filename=filename)
+		self.name = name
+		if not name:
+			match = _nameFinder.match(name)
+			self.name = match.group(2) if match else None
+		return match
+		
 	def __str__(self):
 		return "%s(%r)" % (self.__class__.__name__, self.name)
 	__repr__ = __str__
