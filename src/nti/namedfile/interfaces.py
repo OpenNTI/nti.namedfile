@@ -14,6 +14,8 @@ plonefile_zopefile_patch_on_import.patch()
 
 from zope import interface
 
+from zope.location.interfaces import IContained
+
 from zope.mimetype.interfaces import mimeTypeConstraint
 
 from nti.schema.field import Int
@@ -65,7 +67,7 @@ class IFileConstraints(interface.Interface):
 		the allowed list of extensions.
 		"""
 
-class IFile(IPloneFile, ILastModified):
+class IFile(IPloneFile, ILastModified, IContained):
 	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
 
 class INamedFile(IFile, IPloneNamedFile):
