@@ -114,7 +114,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 			ext_self.name = name
 
 		# contentType
-		for name in ('FileMimeType', 'contentType', 'type'):
+		for name in ('FileMimeType', 'contentType', 'content_type', 'type'):
 			if name in parsed:
 				ext_self.contentType = bytes(parsed[name])
 				updated = True
