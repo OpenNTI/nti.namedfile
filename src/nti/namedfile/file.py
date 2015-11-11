@@ -103,8 +103,8 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 											 contentType=contentType, 
 											 filename=filename)
 		self.name = name
-		if not name:
-			match = _nameFinder.match(name)
+		if not name and filename:
+			match = _nameFinder.match(filename)
 			self.name = match.group(2) if match else None
 		
 	def __str__(self):
