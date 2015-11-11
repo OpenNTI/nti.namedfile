@@ -23,6 +23,7 @@ from nti.schema.field import ValidText as Text
 
 from nti.coremetadata.interfaces import ILastModified
 
+from plone.namedfile.interfaces import IFile as IPloneFile
 from plone.namedfile.interfaces import INamedFile as IPloneNamedFile
 from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
 from plone.namedfile.interfaces import INamedBlobFile as IPloneNamedBlobFile
@@ -64,17 +65,20 @@ class IFileConstraints(interface.Interface):
 		the allowed list of extensions.
 		"""
 
-class INamedFile(IPloneNamedFile, ILastModified):
+class IFile(IPloneFile, ILastModified):
 	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
 
-class INamedImage(IPloneNamedImage, ILastModified):
-	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
+class INamedFile(IFile, IPloneNamedFile):
+	pass
+
+class INamedImage(IFile, IPloneNamedImage):
+	pass
 
 class INamedBlobFile(IPloneNamedBlobFile, INamedFile):
-	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
+	pass
 
 class INamedBlobImage(IPloneNamedBlobImage, INamedImage):
-	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
+	pass
 
 class IInternalFileRef(interface.Interface):
 	"""
