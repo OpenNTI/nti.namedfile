@@ -14,12 +14,16 @@ import os
 from zope import component
 from zope import interface
 
+from zope.location.interfaces import IContained
+
 from zope.mimetype.interfaces import mimeTypeConstraint
 
 from plone.namedfile.file import NamedFile as PloneNamedFile
 from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
+
+from nti.common.property import alias
 
 from nti.coremetadata.mixins import CreatedAndModifiedTimeMixin
 
@@ -82,10 +86,14 @@ class FileConstraints(object):
 								'*' in self.allowed_extensions))
 		return result
 
+@interface.implementer(IContained)
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 	name = None
-
+	
+	__parent__ = None
+	__name__ = alias('name')
+	
 	def __str__(self):
 		return "%s(%r)" % (self.__class__.__name__, self.name)
 	__repr__ = __str__
