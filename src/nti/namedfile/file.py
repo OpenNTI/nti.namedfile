@@ -15,8 +15,6 @@ import re
 from zope import component
 from zope import interface
 
-from zope.location.interfaces import IContained
-
 from zope.mimetype.interfaces import mimeTypeConstraint
 
 from plone.namedfile.file import NamedFile as PloneNamedFile
@@ -89,7 +87,6 @@ class FileConstraints(object):
 
 _nameFinder = re.compile(r'(.*[\\/:])?(.+)')
 
-@interface.implementer(IContained)
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 	name = None
