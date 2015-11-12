@@ -101,10 +101,7 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 		super(NamedFileMixin, self).__init__(data=data,
 											 contentType=contentType, 
 											 filename=filename)
-		self.name = name
-		if not name and filename:
-			match = _nameFinder.match(filename)
-			self.name = match.group(2) if match else None
+		self.name = name or self.nameFinder(filename)
 		
 	@readproperty
 	def __name__(self):
@@ -113,6 +110,12 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 	def __str__(self):
 		return "%s(%r)" % (self.__class__.__name__, self.name)
 	__repr__ = __str__
+
+	@classmethod
+	def nameFinder(cls, filename):
+		match = _nameFinder.match(filename) if filename else None
+		result = match.group(2) if match else None
+		return result
 
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, PloneNamedFile):
