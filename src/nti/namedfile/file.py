@@ -19,6 +19,8 @@ from zope.cachedescriptors.property import readproperty
 
 from zope.mimetype.interfaces import mimeTypeConstraint
 
+from plone.namedfile.interfaces import INamed as IPloneNamed
+
 from plone.namedfile.file import NamedFile as PloneNamedFile
 from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
@@ -28,6 +30,7 @@ from nti.common.property import alias
 
 from nti.coremetadata.mixins import CreatedAndModifiedTimeMixin
 
+from .interfaces import IFile
 from .interfaces import INamedFile
 from .interfaces import INamedImage
 from .interfaces import INamedBlobFile
@@ -132,3 +135,11 @@ class NamedBlobFile(NamedFileMixin, PloneNamedBlobFile):
 @interface.implementer(INamedBlobImage)
 class NamedBlobImage(NamedFileMixin, PloneNamedBlobImage):
 	pass
+
+def get_file_name(context):
+	result = None
+	if IFile.providedBy(context):
+		result = context.name
+	if not result and IPloneNamed.providedBy(context):
+		result = NamedFileMixin.nameFinder(context.filename) or context.filename
+	return result
