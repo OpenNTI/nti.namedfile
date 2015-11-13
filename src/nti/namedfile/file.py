@@ -37,6 +37,17 @@ from .interfaces import INamedBlobFile
 from .interfaces import INamedBlobImage
 from .interfaces import IFileConstraints
 
+_nameFinder = re.compile(r'(.*[\\/:])?(.+)')
+
+def safe_filename(s):
+	return re.sub('[^-a-zA-Z0-9_.() ]+', '', s) if s else s
+
+def nameFinder(filename):
+	match = _nameFinder.match(filename) if filename else None
+	result = match.group(2) if match else None
+	return result
+name_finder = nameFinder
+
 @component.adapter(INamedFile)
 @interface.implementer(IFileConstraints)
 class FileConstraints(object):
@@ -90,8 +101,6 @@ class FileConstraints(object):
 								'*' in self.allowed_extensions))
 		return result
 
-_nameFinder = re.compile(r'(.*[\\/:])?(.+)')
-
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 	name = None
@@ -116,9 +125,7 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 	@classmethod
 	def nameFinder(cls, filename):
-		match = _nameFinder.match(filename) if filename else None
-		result = match.group(2) if match else None
-		return result
+		return nameFinder(filename)
 
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, PloneNamedFile):

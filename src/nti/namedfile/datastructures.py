@@ -9,8 +9,6 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
-import re
-
 from zope import component
 from zope import interface
 
@@ -23,6 +21,8 @@ from nti.coremetadata.schema import DataURI
 from nti.externalization.interfaces import StandardExternalFields
 
 from nti.externalization.datastructures import AbstractDynamicObjectIO
+
+from .file import safe_filename
 
 from .file import NamedFile
 from .file import NamedImage
@@ -38,9 +38,6 @@ from .interfaces import IInternalFileRef
 OID = StandardExternalFields.OID
 NTIID = StandardExternalFields.NTIID
 MIMETYPE = StandardExternalFields.MIMETYPE
-
-def safe_filename(s):
-	return re.sub('[^-a-zA-Z0-9_.() ]+', '', s) if s else s
 
 @component.adapter(INamedFile)
 class NamedFileObjectIO(AbstractDynamicObjectIO):
