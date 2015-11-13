@@ -69,3 +69,15 @@ class TestNamedFile(unittest.TestCase):
 		assert_that(internal, externalizes(all_of(has_key('FileMimeType'),
 												  has_key('filename'),
 												  has_key('name'))))
+		
+	def test_namefinder(self):
+		s = NamedFile.nameFinder("ichigo")
+		assert_that(s, is_('ichigo'))
+
+		s = NamedFile.nameFinder("/users/aizen/bankai.gif")
+		assert_that(s, is_('bankai.gif'))
+		
+		s = NamedFile.nameFinder("c:\\users\\rukia\\shikai.zip")
+		assert_that(s, is_('shikai.zip'))
+
+
