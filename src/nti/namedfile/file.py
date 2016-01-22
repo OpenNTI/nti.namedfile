@@ -30,17 +30,17 @@ from nti.common.property import alias
 
 from nti.coremetadata.mixins import CreatedAndModifiedTimeMixin
 
-from .interfaces import IFile
-from .interfaces import INamedFile
-from .interfaces import INamedImage
-from .interfaces import INamedBlobFile
-from .interfaces import INamedBlobImage
-from .interfaces import IFileConstraints
+from nti.namedfile.interfaces import IFile
+from nti.namedfile.interfaces import INamedFile
+from nti.namedfile.interfaces import INamedImage
+from nti.namedfile.interfaces import INamedBlobFile
+from nti.namedfile.interfaces import INamedBlobImage
+from nti.namedfile.interfaces import IFileConstraints
 
 _nameFinder = re.compile(r'(.*[\\/:])?(.+)')
 
 def safe_filename(s):
-	return re.sub('[^-a-zA-Z0-9_.() ]+', '', s) if s else s
+	return re.sub(r'[/<>:"\\|?*]+', '', s) if s else s
 
 def nameFinder(filename):
 	match = _nameFinder.match(filename) if filename else None
@@ -104,17 +104,17 @@ class FileConstraints(object):
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 	name = None
-	
+
 	__parent__ = None
 
 	content_type = alias('contentType')
-	
+
 	def __init__(self, data='', contentType='', filename=None, name=None):
 		super(NamedFileMixin, self).__init__(data=data,
-											 contentType=contentType, 
+											 contentType=contentType,
 											 filename=filename)
 		self.name = name or self.nameFinder(filename)
-		
+
 	@readproperty
 	def __name__(self):
 		return self.name
