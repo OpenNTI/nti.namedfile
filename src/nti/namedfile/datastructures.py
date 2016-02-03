@@ -18,22 +18,22 @@ from nti.common.dataurl import DataURL
 
 from nti.coremetadata.schema import DataURI
 
-from nti.externalization.interfaces import StandardExternalFields
-
 from nti.externalization.datastructures import AbstractDynamicObjectIO
 
-from .file import safe_filename
+from nti.externalization.interfaces import StandardExternalFields
 
-from .file import NamedFile
-from .file import NamedImage
-from .file import NamedBlobFile
-from .file import NamedBlobImage
+from nti.namedfile.file import safe_filename
 
-from .interfaces import INamedFile
-from .interfaces import INamedImage
-from .interfaces import INamedBlobFile
-from .interfaces import INamedBlobImage
-from .interfaces import IInternalFileRef
+from nti.namedfile.file import NamedFile
+from nti.namedfile.file import NamedImage
+from nti.namedfile.file import NamedBlobFile
+from nti.namedfile.file import NamedBlobImage
+
+from nti.namedfile.interfaces import INamedFile
+from nti.namedfile.interfaces import INamedImage
+from nti.namedfile.interfaces import INamedBlobFile
+from nti.namedfile.interfaces import INamedBlobImage
+from nti.namedfile.interfaces import IInternalFileRef
 
 OID = StandardExternalFields.OID
 NTIID = StandardExternalFields.NTIID
@@ -150,9 +150,9 @@ def BaseFactory(ext_obj, file_factory, image_factory=None):
 	factory = file_factory
 	image_factory = image_factory or file_factory
 	url = ext_obj.get('url') or ext_obj.get('value')
-	contentType = 	ext_obj.get('FileMimeType') or \
-					ext_obj.get('contentType') or \
-					ext_obj.get('content_type')
+	contentType = 	ext_obj.get('FileMimeType') \
+				or	ext_obj.get('contentType')  \
+				or 	ext_obj.get('content_type')
 	if url and url.startswith(b'data:'):
 		ext_obj['url'] = DataURL(url)
 		ext_obj.pop('value', None)
