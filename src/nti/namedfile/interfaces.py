@@ -16,18 +16,18 @@ from zope import interface
 
 from zope.mimetype.interfaces import mimeTypeConstraint
 
-from nti.schema.field import Int
-from nti.schema.field import ValidTextLine
-from nti.schema.field import IndexedIterable
-from nti.schema.field import ValidText as Text
-
-from nti.coremetadata.interfaces import ILastModified
-
 from plone.namedfile.interfaces import IFile as IPloneFile
 from plone.namedfile.interfaces import INamedFile as IPloneNamedFile
 from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
 from plone.namedfile.interfaces import INamedBlobFile as IPloneNamedBlobFile
 from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
+
+from nti.coremetadata.interfaces import ILastModified
+
+from nti.schema.field import Int
+from nti.schema.field import ValidTextLine
+from nti.schema.field import IndexedIterable
+from nti.schema.field import ValidText as Text
 
 class IFileConstraints(interface.Interface):
 
