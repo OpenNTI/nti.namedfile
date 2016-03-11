@@ -22,7 +22,6 @@ from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
 from plone.namedfile.interfaces import INamedBlobFile as IPloneNamedBlobFile
 from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
 
-from nti.coremetadata.interfaces import ICreated
 from nti.coremetadata.interfaces import ILastModified
 
 from nti.schema.field import Int
@@ -66,7 +65,10 @@ class IFileConstraints(interface.Interface):
 		the allowed list of extensions.
 		"""
 
-class IFile(IPloneFile, ILastModified, ICreated):
+# XXX: For legacy purposes do not make IFile to be an ICreated object to avoid
+# denying access due to default acl providers on ICreated objects. We need a
+# default ACL provider for IFile objects
+class IFile(IPloneFile, ILastModified):
 	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
 
 class INamedFile(IFile, IPloneNamedFile):
