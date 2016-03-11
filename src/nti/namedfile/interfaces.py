@@ -9,7 +9,7 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
-from . import monkey as plonefile_zopefile_patch_on_import
+from nti.namedfile import monkey as plonefile_zopefile_patch_on_import
 plonefile_zopefile_patch_on_import.patch()
 
 from zope import interface
@@ -22,6 +22,7 @@ from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
 from plone.namedfile.interfaces import INamedBlobFile as IPloneNamedBlobFile
 from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
 
+from nti.coremetadata.interfaces import ICreated
 from nti.coremetadata.interfaces import ILastModified
 
 from nti.schema.field import Int
@@ -65,7 +66,7 @@ class IFileConstraints(interface.Interface):
 		the allowed list of extensions.
 		"""
 
-class IFile(IPloneFile, ILastModified):
+class IFile(IPloneFile, ILastModified, ICreated):
 	name = ValidTextLine(title="Identifier for the file", required=False, default=None)
 
 class INamedFile(IFile, IPloneNamedFile):
