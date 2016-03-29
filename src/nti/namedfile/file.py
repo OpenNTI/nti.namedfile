@@ -115,6 +115,10 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 											 filename=filename)
 		self.name = name or self.nameFinder(filename)
 
+	@property
+	def length(self):
+		return self.getSize()
+
 	@readproperty
 	def __name__(self):
 		return self.name
