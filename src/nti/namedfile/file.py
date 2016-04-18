@@ -9,15 +9,11 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
-import os
 import re
 
-from zope import component
 from zope import interface
 
 from zope.cachedescriptors.property import readproperty
-
-from zope.mimetype.interfaces import mimeTypeConstraint
 
 from plone.namedfile.interfaces import INamed as IPloneNamed
 
@@ -35,7 +31,6 @@ from nti.namedfile.interfaces import INamedFile
 from nti.namedfile.interfaces import INamedImage
 from nti.namedfile.interfaces import INamedBlobFile
 from nti.namedfile.interfaces import INamedBlobImage
-from nti.namedfile.interfaces import IFileConstraints
 
 _nameFinder = re.compile(r'(.*[\\/:])?(.+)')
 
@@ -47,59 +42,6 @@ def nameFinder(filename):
 	result = match.group(2) if match else None
 	return result
 name_finder = nameFinder
-
-@component.adapter(INamedFile)
-@interface.implementer(IFileConstraints)
-class FileConstraints(object):
-
-	_v_file = None
-
-	max_file_size = None
-	allowed_extensions = ('*',)
-	allowed_mime_types = ("*/*",)
-
-	def __init__(self, context=None):  # make it adpater
-		self._v_file = context
-
-	def is_file_size_allowed(self, size=None):
-		size = self._v_file.getSize() if self._v_file is not None and size is None else size
-		result = not self.max_file_size or (size is not None and size <= self.max_file_size)
-		return result
-
-	def is_mime_type_allowed(self, mime_type=None):
-		mime_type = mime_type or getattr(self._v_file, 'contentType', None)
-		mime_type = mime_type.lower() if mime_type else mime_type
-		if (not mime_type  # No input
-			or not mimeTypeConstraint(mime_type)  # Invalid
-			or not self.allowed_mime_types):  # Empty list: all excluded
-			return False
-
-		major, minor = mime_type.split('/')
-		if major == '*' or minor == '*':
-			return False  # Must be concrete
-
-		for mt in self.allowed_mime_types:
-			if mt == '*/*':
-				return True  # Total wildcard
-
-			mt = mt.lower()
-			if mt == mime_type:
-				return True
-
-			amajor, aminor = mt.split('/')
-
-			# Wildcards are only reasonable in the minor part,  e.g., text/*.
-			if aminor == minor or aminor == '*':
-				if major == amajor:
-					return True
-		return False
-
-	def is_filename_allowed(self, filename=None):
-		filename = filename or getattr(self._v_file, 'filename', None)
-		ext = os.path.splitext(filename.lower())[1] if filename else None
-		result = (filename and (ext in self.allowed_extensions or \
-								'*' in self.allowed_extensions))
-		return result
 
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
@@ -154,3 +96,12 @@ def get_file_name(context):
 	if not result and IPloneNamed.providedBy(context):
 		result = NamedFileMixin.nameFinder(context.filename) or context.filename
 	return result
+
+import zope.deferredimport
+zope.deferredimport.initialize()
+
+zope.deferredimport.deprecatedFrom(
+	"Moved to nti.namedfile.constraints",
+	"nti.namedfile.constraints",
+	"FileConstraints"
+)

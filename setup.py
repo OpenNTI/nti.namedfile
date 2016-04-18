@@ -46,6 +46,7 @@ setup(
 		'zope.app.file',
 		'zope.component',
 		'zope.container',
+		'zope.deferredimport',
 		'zope.interface',
 		'zope.location',
 		'zope.mimetype',

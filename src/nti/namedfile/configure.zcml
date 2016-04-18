@@ -12,13 +12,17 @@
 
 	<include package="plone.namedfile" file="z3c-blobfile.zcml" />
 	
-	<adapter factory=".file.FileConstraints"
+	<adapter factory=".constraints.FileConstraints"
 			 for=".interfaces.INamedFile"
 			 provides=".interfaces.IFileConstraints" />
 			 
 	<!-- Externalization -->
 	<include package="nti.externalization" file="meta.zcml" />
 	<include package="nti.externalization" />
+
+	<ext:registerAutoPackageIO
+		root_interfaces=".interfaces.IFileConstraints"
+		modules=".constraints" />
 
 	<adapter factory=".datastructures.NamedFileFactory"
 			 for="dolmen.builtins.IDict"
