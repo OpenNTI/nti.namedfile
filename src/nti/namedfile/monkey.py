@@ -11,21 +11,23 @@ logger = __import__('logging').getLogger(__name__)
 
 from cStringIO import StringIO
 
-from zope.file.upload import nameFinder
 from zope.file import interfaces as zfile_interfaces
+
+from zope.file.upload import nameFinder
 
 from zope.file import file as zfile
 zfile = zfile
-
-from plone.namedfile import file as nfile
-from plone.namedfile import utils as nutils
-from plone.namedfile.interfaces import IFile as INFile
 
 from zope import component
 
 from zope.interface import interfaces
 
 from zope.mimetype.interfaces import IMimeTypeGetter
+
+from plone.namedfile import file as nfile
+from plone.namedfile import utils as nutils
+
+from plone.namedfile.interfaces import IFile as INFile
 
 from nti.common.property import alias
 
