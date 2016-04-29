@@ -83,11 +83,25 @@ class NamedImage(NamedFileMixin, PloneNamedImage):
 
 @interface.implementer(INamedBlobFile)
 class NamedBlobFile(NamedFileMixin, PloneNamedBlobFile):
-	pass
+	
+	@property
+	def size(self):
+		return super(NamedBlobFile, self).size
+		
+	@size.setter
+	def size(self, nv):
+		pass
 
 @interface.implementer(INamedBlobImage)
 class NamedBlobImage(NamedFileMixin, PloneNamedBlobImage):
-	pass
+	
+	@property
+	def size(self):
+		return super(NamedBlobImage, self).size
+		
+	@size.setter
+	def size(self, nv):
+		pass
 
 def get_file_name(context):
 	result = None

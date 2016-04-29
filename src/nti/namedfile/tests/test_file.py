@@ -22,6 +22,7 @@ from nti.externalization.internalization import find_factory_for
 from nti.externalization.internalization import update_from_external_object
 
 from nti.namedfile.file import NamedFile
+from nti.namedfile.file import NamedBlobFile
 
 from nti.namedfile.tests import SharedConfiguringTestLayer
 
@@ -69,4 +70,10 @@ class TestNamedFile(unittest.TestCase):
 		s = NamedFile.nameFinder("c:\\users\\rukia\\shikai.zip")
 		assert_that(s, is_('shikai.zip'))
 
-
+	def test_nameblob(self):
+		s = NamedBlobFile()
+		s.name = 'blob'
+		s.data = GIF_DATAURL
+		assert_that(s, has_property('size', is_(106)))
+		s.size = 888
+		assert_that(s, has_property('size', is_(106)))
