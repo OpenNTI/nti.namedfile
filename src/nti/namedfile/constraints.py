@@ -25,13 +25,15 @@ from nti.namedfile.interfaces import IFileConstraints
 class FileConstraints(object):
 
 	mimeType = mime_type = u'application/vnd.nextthought.namedfileconstraints'
-	parameters = {}
 
 	_v_file = None
 
+	max_files = 2
 	max_file_size = None
 	allowed_extensions = ('*',)
 	allowed_mime_types = ("*/*",)
+
+	parameters = {} # IContentTypeAware
 
 	def __init__(self, context=None):  # make it adpater
 		self._v_file = context

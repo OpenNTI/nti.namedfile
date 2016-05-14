@@ -47,6 +47,8 @@ class IFileConstraints(interface.Interface):
 						min=1,
 						required=False)
 
+	max_files = Int(title="max attachments files", required=True, default=2)
+
 	def is_file_size_allowed(size=None):
 		"""
 		Return whether or not the given size is allowed
