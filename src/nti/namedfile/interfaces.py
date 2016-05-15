@@ -28,7 +28,7 @@ from nti.schema.field import Int
 from nti.schema.field import ValidTextLine
 from nti.schema.field import IndexedIterable
 from nti.schema.field import ValidText as Text
-
+	
 class IFileConstraints(interface.Interface):
 
 	allowed_mime_types = IndexedIterable(title="Mime types that are accepted",
@@ -66,6 +66,11 @@ class IFileConstraints(interface.Interface):
 		Return whether the filename given is allowed according to
 		the allowed list of extensions.
 		"""
+
+class IFileConstrainted(interface.Interface):
+	"""
+	Marker interface for objects that have associated :class:`.IFileConstraints`
+	"""
 
 # XXX: For legacy purposes do not make IFile to be an ICreated object to avoid
 # denying access due to default acl providers on ICreated objects. We need a
