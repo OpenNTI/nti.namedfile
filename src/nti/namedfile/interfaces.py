@@ -67,7 +67,7 @@ class IFileConstraints(interface.Interface):
 		the allowed list of extensions.
 		"""
 
-class IFileConstrainted(interface.Interface):
+class IFileConstrained(interface.Interface):
 	"""
 	Marker interface for objects that have associated :class:`.IFileConstraints`
 	"""
