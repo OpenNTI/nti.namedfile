@@ -14,14 +14,6 @@
 	
 	<include package="." file="configure_external.zcml" />
 
-	<!-- Externalization -->
-	<include package="nti.externalization" file="meta.zcml" />
-	<include package="nti.externalization" />
-
-	<ext:registerAutoPackageIO
-		root_interfaces=".interfaces.IFileConstraints"
-		modules=".constraints" />
-
 	<adapter factory=".datastructures.NamedFileFactory"
 			 for="dolmen.builtins.IDict"
 			 provides="nti.externalization.interfaces.IMimeObjectFactory"
