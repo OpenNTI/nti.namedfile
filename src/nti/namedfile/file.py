@@ -34,9 +34,6 @@ from nti.namedfile.interfaces import INamedBlobImage
 
 _nameFinder = re.compile(r'(.*[\\/:])?(.+)')
 
-def safe_filename(s):
-	return re.sub(r'[/<>:"\\|?*]+', '', s) if s else s
-
 def nameFinder(filename):
 	match = _nameFinder.match(filename) if filename else None
 	result = match.group(2) if match else None
@@ -114,6 +111,11 @@ def get_file_name(context):
 import zope.deferredimport
 zope.deferredimport.initialize()
 
+zope.deferredimport.deprecatedFrom(
+	"Moved to nti.common.file",
+	"nti.common.file",
+	"safe_filename"
+)
 zope.deferredimport.deprecatedFrom(
 	"Moved to nti.namedfile.constraints",
 	"nti.namedfile.constraints",
