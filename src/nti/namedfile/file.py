@@ -32,6 +32,8 @@ from nti.namedfile.interfaces import INamedImage
 from nti.namedfile.interfaces import INamedBlobFile
 from nti.namedfile.interfaces import INamedBlobImage
 
+name_finder = nameFinder # BWC
+
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 	name = None
