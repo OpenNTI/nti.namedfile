@@ -22,7 +22,7 @@ from nti.externalization.datastructures import AbstractDynamicObjectIO
 
 from nti.externalization.interfaces import StandardExternalFields
 
-from nti.namedfile.file import safe_filename
+from nti.common.file import safe_filename
 
 from nti.namedfile.file import NamedFile
 from nti.namedfile.file import NamedImage
