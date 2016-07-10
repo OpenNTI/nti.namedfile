@@ -77,6 +77,6 @@ class FileConstraints(object):
 	def is_filename_allowed(self, filename=None):
 		filename = filename or getattr(self._v_file, 'filename', None)
 		ext = os.path.splitext(filename.lower())[1] if filename else None
-		result = (filename and (ext in self.allowed_extensions or \
-								'*' in self.allowed_extensions))
+		result = (filename and (	'*' in self.allowed_extensions 
+								or	ext in self.allowed_extensions))
 		return result
