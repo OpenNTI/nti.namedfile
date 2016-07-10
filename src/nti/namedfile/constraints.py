@@ -44,9 +44,6 @@ class FileConstraints(object):
 		return result
 
 	def is_mime_type_allowed(self, mime_type=None):
-		if "*/*" in self.allowed_mime_types: # allow all
-			return True
-
 		mime_type = mime_type or getattr(self._v_file, 'contentType', None)
 		mime_type = mime_type.lower() if mime_type else mime_type
 		if (	not mime_type  # No input
