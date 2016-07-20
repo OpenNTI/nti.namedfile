@@ -98,17 +98,17 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 			updated = True
 
 		if 'filename' in parsed:
-			ext_self.filename = safe_filename(parsed['filename'])
+			ext_self.filename = parsed['filename']
 			# some times we get full paths
 			name_found = nameFinder(ext_self)
 			if name_found:
-				ext_self.filename = safe_filename(name_found)
-			name = ext_self.filename if not name else name
+				ext_self.filename = name_found
+			name = safe_filename(ext_self.filename if not name else name)
 			updated = True
 
 		# file id
 		if name is not None:
-			ext_self.name = name
+			ext_self.name = safe_filename(name)
 
 		# contentType
 		for name in ('FileMimeType', 'contentType', 'content_type', 'type'):
