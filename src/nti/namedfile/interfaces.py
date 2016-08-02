@@ -28,7 +28,7 @@ from nti.schema.field import Int
 from nti.schema.field import ValidTextLine
 from nti.schema.field import IndexedIterable
 from nti.schema.field import ValidText as Text
-	
+
 class IFileConstraints(interface.Interface):
 
 	allowed_mime_types = IndexedIterable(title="Mime types that are accepted",
@@ -64,7 +64,7 @@ class IFileConstraints(interface.Interface):
 	def is_filename_allowed(filename=None):
 		"""
 		Return whether the filename given is allowed according to
-		the allowed list of extensions.
+		the allowed list of extensions (case-insensitive).
 		"""
 
 class IFileConstrained(interface.Interface):
