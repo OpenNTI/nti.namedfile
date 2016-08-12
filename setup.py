@@ -41,7 +41,7 @@ setup(
 	tests_require=TESTS_REQUIRE,
 	install_requires=[
 		'setuptools',
-		'plone.namedfile == 3.0.9',
+		'plone.namedfile==3.0.9',
 		'zope.annotation',
 		'zope.app.file',
 		'zope.component',
