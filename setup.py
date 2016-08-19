@@ -52,9 +52,9 @@ setup(
 		'zope.mimetype',
 		'zope.schema',
 		'zope.security',
-		'nti.common',
 		'nti.coremetadata',
 		'nti.externalization',
+		'nti.property',
 		'nti.schema'
 	],
 	extras_require={

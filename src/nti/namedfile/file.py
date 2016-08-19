@@ -108,14 +108,24 @@ def get_file_name(context):
 		result = NamedFileMixin.nameFinder(context.filename) or context.filename
 	return result
 
+def safe_filename(s):
+	__traceback_info__ = s
+	if s:
+		try:
+			s = s.encode("ascii", 'xmlcharrefreplace')
+		except Exception:
+			pass
+		s = re.sub(r'[/<>:;"\\|#?*\s]+', '_', s)
+		s = re.sub(r'&', '_', s)
+		try:
+			s = unicode( s )
+		except UnicodeDecodeError:
+			s = s.decode( 'utf-8' )
+	return s
+
 import zope.deferredimport
 zope.deferredimport.initialize()
 
-zope.deferredimport.deprecatedFrom(
-	"Moved to nti.common.file",
-	"nti.common.file",
-	"safe_filename"
-)
 zope.deferredimport.deprecatedFrom(
 	"Moved to nti.namedfile.constraints",
 	"nti.namedfile.constraints",

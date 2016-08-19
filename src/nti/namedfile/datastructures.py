@@ -20,12 +20,12 @@ from nti.externalization.datastructures import AbstractDynamicObjectIO
 
 from nti.externalization.interfaces import StandardExternalFields
 
-from nti.common.file import safe_filename
-
 from nti.namedfile.file import NamedFile
 from nti.namedfile.file import NamedImage
 from nti.namedfile.file import NamedBlobFile
 from nti.namedfile.file import NamedBlobImage
+
+from nti.namedfile.file import safe_filename
 
 from nti.namedfile.interfaces import INamedFile
 from nti.namedfile.interfaces import INamedImage
