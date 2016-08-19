@@ -94,4 +94,4 @@ class IInternalFileRef(interface.Interface):
 	"""
 	Marker interface for reference to an internal file
 	"""
-	reference = ValidTextLine(title="the ntiid/oid", required=False)
+	reference = ValidTextLine(title="the internal identifier", required=False)

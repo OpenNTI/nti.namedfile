@@ -14,8 +14,6 @@ from zope import interface
 
 from zope.file.upload import nameFinder
 
-from nti.common.dataurl import DataURL
-
 from nti.coremetadata.schema import DataURI
 
 from nti.externalization.datastructures import AbstractDynamicObjectIO
@@ -34,6 +32,8 @@ from nti.namedfile.interfaces import INamedImage
 from nti.namedfile.interfaces import INamedBlobFile
 from nti.namedfile.interfaces import INamedBlobImage
 from nti.namedfile.interfaces import IInternalFileRef
+
+from nti.property.dataurl import DataURL
 
 OID = StandardExternalFields.OID
 NTIID = StandardExternalFields.NTIID

@@ -29,7 +29,7 @@ from plone.namedfile import utils as nutils
 
 from plone.namedfile.interfaces import IFile as INFile
 
-from nti.common.property import alias
+from nti.property.property import alias
 
 def _patch():
 	# First, make plone's IFile extend zope's IFile. zope's IFile

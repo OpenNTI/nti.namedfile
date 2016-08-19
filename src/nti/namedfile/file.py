@@ -9,6 +9,8 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
+import re
+
 from zope import interface
 
 from zope.cachedescriptors.property import readproperty
@@ -20,10 +22,6 @@ from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
-from nti.common.file import nameFinder
-
-from nti.common.property import alias
-
 from nti.coremetadata.mixins import CreatedAndModifiedTimeMixin
 
 from nti.namedfile.interfaces import IFile
@@ -32,7 +30,15 @@ from nti.namedfile.interfaces import INamedImage
 from nti.namedfile.interfaces import INamedBlobFile
 from nti.namedfile.interfaces import INamedBlobImage
 
-name_finder = nameFinder # BWC
+from nti.property.property import alias
+
+_nameFinder = re.compile(r'(.*[\\/:])?(.+)')
+
+def name_finder(filename):
+	match = _nameFinder.match(filename) if filename else None
+	result = match.group(2) if match else None
+	return result
+nameFinder = name_finder
 
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
