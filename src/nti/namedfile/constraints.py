@@ -10,24 +10,16 @@ __docformat__ = "restructuredtext en"
 logger = __import__('logging').getLogger(__name__)
 
 import os
-import re
 
 from zope import component
 from zope import interface
 
 from zope.mimetype.interfaces import IContentTypeAware
 
+from nti.mimetype.mimetype import mimeTypeConstraint
+
 from nti.namedfile.interfaces import INamedFile
 from nti.namedfile.interfaces import IFileConstraints
-
-_token_re = r"[!#$%&'*+\-.\d^_`a-z{|}~]+"
-_mime_type_rx = re.compile("%s/%s(;+)*" % (_token_re, _token_re))
-
-def mimeTypeConstraint(value):
-	"""
-    Return `True` iff `value` is a syntactically legal MIME type.
-    """
-	return _mime_type_rx.match(value) is not None
 
 @component.adapter(INamedFile)
 @interface.implementer(IFileConstraints, IContentTypeAware)
