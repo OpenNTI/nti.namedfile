@@ -43,6 +43,7 @@ def _patch():
 		raise ImportError("Internals of plone.namedfile have changed")
 	INFile.__bases__ = (zfile_interfaces.IFile,)
 
+	# use a proper mime-type validation
 	mimeType = IContentTypeAware['mimeType']
 	mimeType.constraint = mimeTypeConstraint
 
