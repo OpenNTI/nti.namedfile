@@ -23,11 +23,14 @@ from zope import component
 from zope.interface import interfaces
 
 from zope.mimetype.interfaces import IMimeTypeGetter
+from zope.mimetype.interfaces import IContentTypeAware
 
 from plone.namedfile import file as nfile
 from plone.namedfile import utils as nutils
 
 from plone.namedfile.interfaces import IFile as INFile
+
+from nti.mimetype.mimetype import mimeTypeConstraint
 
 from nti.property.property import alias
 
@@ -39,6 +42,9 @@ def _patch():
 	if INFile.__iro__ != (INFile, interfaces.Interface,):
 		raise ImportError("Internals of plone.namedfile have changed")
 	INFile.__bases__ = (zfile_interfaces.IFile,)
+
+	mimeType = IContentTypeAware['mimeType']
+	mimeType.constraint = mimeTypeConstraint
 
 	# They are almost compatible, with a few minor differences we
 	# fix up here.
