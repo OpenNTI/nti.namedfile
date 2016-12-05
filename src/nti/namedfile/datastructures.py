@@ -14,7 +14,7 @@ from zope import interface
 
 from zope.file.upload import nameFinder
 
-from nti.coremetadata.schema import DataURI
+from nti.property.schema import DataURI
 
 from nti.externalization.datastructures import AbstractDynamicObjectIO
 
