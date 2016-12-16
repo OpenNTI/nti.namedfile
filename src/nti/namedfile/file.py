@@ -22,13 +22,13 @@ from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
+from nti.base.mixins import CreatedAndModifiedTimeMixin
+
 from nti.namedfile.interfaces import IFile
 from nti.namedfile.interfaces import INamedFile
 from nti.namedfile.interfaces import INamedImage
 from nti.namedfile.interfaces import INamedBlobFile
 from nti.namedfile.interfaces import INamedBlobImage
-
-from nti.namedfile.mixins import CreatedAndModifiedTimeMixin
 
 from nti.property.property import alias
 

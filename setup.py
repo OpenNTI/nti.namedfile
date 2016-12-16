@@ -52,7 +52,7 @@ setup(
 		'zope.mimetype',
 		'zope.schema',
 		'zope.security',
-		'nti.coremetadata',
+		'nti.base',
 		'nti.externalization',
 		'nti.mimetype',
 		'nti.property',

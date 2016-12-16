@@ -20,7 +20,7 @@ from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
 from plone.namedfile.interfaces import INamedBlobFile as IPloneNamedBlobFile
 from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
 
-from nti.coremetadata.interfaces import ILastModified
+from nti.base.interfaces import ILastModified
 
 from nti.mimetype.mimetype import mimeTypeConstraint
 
