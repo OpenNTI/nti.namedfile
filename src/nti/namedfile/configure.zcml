@@ -56,4 +56,17 @@
 		<adapter factory="zope.mimetype.contentinfo.ContentInfo"/>
 	</configure>
 
+	<class class="plone.namedfile.file.NamedFile">
+		<implements interface="nti.base.interfaces.INamed" />
+	</class>
+	<class class="plone.namedfile.file.NamedImage">
+		<implements interface="nti.base.interfaces.INamed" />
+	</class>
+	<class class="plone.namedfile.file.NamedBlobFile">
+		<implements interface="nti.base.interfaces.INamed" />
+	</class>
+	<class class="plone.namedfile.file.NamedBlobImage">
+		<implements interface="nti.base.interfaces.INamed" />
+	</class>
+
 </configure>
