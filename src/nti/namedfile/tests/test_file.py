@@ -20,6 +20,10 @@ from nti.testing.matchers import validly_provides
 
 import unittest
 
+from plone.namedfile.file import NamedFile as PloneNamedFile
+from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
+
+from nti.base.interfaces import IFile
 from nti.base.interfaces import INamed
 
 from nti.externalization.internalization import find_factory_for
@@ -81,4 +85,9 @@ class TestNamedFile(unittest.TestCase):
 		assert_that(s, has_property('size', is_(106)))
 		s.size = 888
 		assert_that(s, has_property('size', is_(106)))
-		assert_that(s, validly_provides(INamed))
+		
+	def test_interface(self):
+		for factory in (NamedBlobFile, NamedFile, PloneNamedFile, PloneNamedBlobFile):
+			s = factory()
+			assert_that(s, validly_provides(IFile))
+			assert_that(s, validly_provides(INamed))
