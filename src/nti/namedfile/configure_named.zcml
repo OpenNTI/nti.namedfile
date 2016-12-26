@@ -1,0 +1,30 @@
+<!-- -*- mode: nxml -*- -->
+<configure	xmlns="http://namespaces.zope.org/zope"
+			xmlns:i18n="http://namespaces.zope.org/i18n"
+			xmlns:zcml="http://namespaces.zope.org/zcml"
+			xmlns:ext="http://nextthought.com/ntp/ext"
+			i18n_domain="zope">
+
+	<include package="zope.component" file="meta.zcml" />
+	<include package="zope.security" file="meta.zcml" />
+	<include package="zope.component" />
+	<include package="zope.security" />
+
+	<class class="plone.namedfile.file.NamedFile">
+		<implements interface="nti.base.interfaces.IFile" />
+		<implements interface="nti.base.interfaces.INamed" />
+	</class>
+	<class class="plone.namedfile.file.NamedImage">
+		<implements interface="nti.base.interfaces.IFile" />
+		<implements interface="nti.base.interfaces.INamed" />
+	</class>
+	<class class="plone.namedfile.file.NamedBlobFile">
+		<implements interface="nti.base.interfaces.IFile" />
+		<implements interface="nti.base.interfaces.INamed" />
+	</class>
+	<class class="plone.namedfile.file.NamedBlobImage">
+		<implements interface="nti.base.interfaces.IFile" />
+		<implements interface="nti.base.interfaces.INamed" />
+	</class>
+		
+</configure>

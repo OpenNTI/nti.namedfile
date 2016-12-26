@@ -12,6 +12,7 @@
 
 	<include package="plone.namedfile" file="z3c-blobfile.zcml" />
 	
+	<include package="." file="configure_named.zcml" />
 	<include package="." file="configure_external.zcml" />
 
 	<adapter factory=".datastructures.NamedFileFactory"
@@ -55,22 +56,5 @@
 
 		<adapter factory="zope.mimetype.contentinfo.ContentInfo"/>
 	</configure>
-
-	<class class="plone.namedfile.file.NamedFile">
-		<implements interface="nti.base.interfaces.IFile" />
-		<implements interface="nti.base.interfaces.INamed" />
-	</class>
-	<class class="plone.namedfile.file.NamedImage">
-		<implements interface="nti.base.interfaces.IFile" />
-		<implements interface="nti.base.interfaces.INamed" />
-	</class>
-	<class class="plone.namedfile.file.NamedBlobFile">
-		<implements interface="nti.base.interfaces.IFile" />
-		<implements interface="nti.base.interfaces.INamed" />
-	</class>
-	<class class="plone.namedfile.file.NamedBlobImage">
-		<implements interface="nti.base.interfaces.IFile" />
-		<implements interface="nti.base.interfaces.INamed" />
-	</class>
 
 </configure>
