@@ -9,7 +9,10 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 from zope.file import interfaces as zfile_interfaces
 
@@ -31,79 +34,84 @@ from plone.namedfile.interfaces import IFile as INFile
 
 from nti.property.property import alias
 
+
 def _patch():
-	# First, make plone's IFile extend zope's IFile. zope's IFile
-	# declares the streaming interfaces open and openDetached while
-	# plone's only declares the buffered 'data' interface, though
-	# the blob-versions implement open and openDetached
-	if INFile.__iro__ != (INFile, interfaces.Interface,):
-		raise ImportError("Internals of plone.namedfile have changed")
-	INFile.__bases__ = (zfile_interfaces.IFile,)
+    # First, make plone's IFile extend zope's IFile. zope's IFile
+    # declares the streaming interfaces open and openDetached while
+    # plone's only declares the buffered 'data' interface, though
+    # the blob-versions implement open and openDetached
+    if INFile.__iro__ != (INFile, interfaces.Interface,):
+        raise ImportError("Internals of plone.namedfile have changed")
+    INFile.__bases__ = (zfile_interfaces.IFile,)
 
-	# They are almost compatible, with a few minor differences we
-	# fix up here.
+    # They are almost compatible, with a few minor differences we
+    # fix up here.
 
-	# size as a property (zope) vs getSize() (plone)
-	nfile.NamedFile.size = property(nfile.NamedFile.getSize)
-	# is already in the blob versions
-	assert hasattr(nfile.NamedBlobFile, 'size')
+    # size as a property (zope) vs getSize() (plone)
+    nfile.NamedFile.size = property(nfile.NamedFile.getSize)
+    # is already in the blob versions
+    assert hasattr(nfile.NamedBlobFile, 'size')
 
-	# zfile is an ILocation. We say that __name__ is always the same
-	# as filename...this is tricky because __name__ on a type means
-	# the type name; only instances can see what's in the type's
-	# __dict__ (and we can't assign to it). So we resort to sticking
-	# in a base class.
-	# TODO: Rethink that, it's probably not right. __name__ is the
-	# name within the container; it may initially be based on
-	# the filename, but they are probably different
-	class _Base(object):
-		__name__ = alias('filename')
-	assert len(nfile.NamedFile.__bases__) == 1
-	nfile.NamedFile.__bases__ += (_Base,)
-	assert len(nfile.NamedBlobFile.__bases__) == 1
-	nfile.NamedBlobFile.__bases__ += (_Base,)
+    # zfile is an ILocation. We say that __name__ is always the same
+    # as filename...this is tricky because __name__ on a type means
+    # the type name; only instances can see what's in the type's
+    # __dict__ (and we can't assign to it). So we resort to sticking
+    # in a base class.
+    # TODO: Rethink that, it's probably not right. __name__ is the
+    # name within the container; it may initially be based on
+    # the filename, but they are probably different
+    class _Base(object):
+        __name__ = alias('filename')
+    assert len(nfile.NamedFile.__bases__) == 1
+    nfile.NamedFile.__bases__ += (_Base,)
+    assert len(nfile.NamedBlobFile.__bases__) == 1
+    nfile.NamedBlobFile.__bases__ += (_Base,)
 
-	nfile.NamedFile.__parent__ = None
-	nfile.NamedBlobFile.__parent__ = None
+    nfile.NamedFile.__parent__ = None
+    nfile.NamedBlobFile.__parent__ = None
 
-	# zfile is IContentTypeAware, plonefile declares 'contentType'
-	nfile.NamedFile.mimeType = alias('contentType')
-	nfile.NamedBlobFile.mimeType = alias('contentType')
-	# and it needs parameters (actually, zfile doesn't get that
-	# right either)
-	nfile.NamedFile.parameters = {}  # true this is unsafe but they are supposed to be read-only
-	nfile.NamedBlobFile.parameters = {}
+    # zfile is IContentTypeAware, plonefile declares 'contentType'
+    nfile.NamedFile.mimeType = alias('contentType')
+    nfile.NamedBlobFile.mimeType = alias('contentType')
+    # and it needs parameters (actually, zfile doesn't get that
+    # right either)
+    # true this is unsafe but they are supposed to be read-only
+    nfile.NamedFile.parameters = {}
+    nfile.NamedBlobFile.parameters = {}
 
-	# plone's non-blob-based files don't have open/openDetached,
-	# so we fake it
-	def _open(self, mode='r'):
-		return StringIO(self.data)
-	nfile.NamedFile.open = _open
-	nfile.NamedFile.openDetached = _open
+    # plone's non-blob-based files don't have open/openDetached,
+    # so we fake it
+    def _open(self, mode='r'):
+        return StringIO(self.data)
+    nfile.NamedFile.open = _open
+    nfile.NamedFile.openDetached = _open
 
-	func_globals = getattr(nutils.get_contenttype, 'func_globals')
-	func_globals['component'] = component
-	func_globals['nameFinder'] = nameFinder
-	func_globals['IMimeTypeGetter'] = IMimeTypeGetter
-	nutils.get_contenttype.__code__ = _get_contenttype.__code__
+    func_globals = getattr(nutils.get_contenttype, 'func_globals')
+    func_globals['component'] = component
+    func_globals['nameFinder'] = nameFinder
+    func_globals['IMimeTypeGetter'] = IMimeTypeGetter
+    nutils.get_contenttype.__code__ = _get_contenttype.__code__
 
 # plone's guessing of content types is very limited compared to what zope does;
 # let's use that instead. But many places have already imported it
 # statically by name, so swizzle out the code
-def _get_contenttype(file=None, filename=None, default='application/octet-stream'):
-	file_type = getattr(file, 'contentType', None)
-	if file_type:
-		return file_type
-	filename = getattr(file, 'filename', filename)
 
-	mimeTypeGetter = component.getUtility(IMimeTypeGetter)
-	mimeType = mimeTypeGetter(data=getattr(file, 'data', None),
-							  content_type=None,
-							  name=nameFinder(filename))
-	return mimeType or default
+
+def _get_contenttype(file=None, filename=None, default='application/octet-stream'):
+    file_type = getattr(file, 'contentType', None)
+    if file_type:
+        return file_type
+    filename = getattr(file, 'filename', filename)
+
+    mimeTypeGetter = component.getUtility(IMimeTypeGetter)
+    mimeType = mimeTypeGetter(data=getattr(file, 'data', None),
+                              content_type=None,
+                              name=nameFinder(filename))
+    return mimeType or default
+
 
 def patch():
-	pass
+    pass
 
 _patch()
 del _patch
