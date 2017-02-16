@@ -92,11 +92,10 @@ def _patch():
     func_globals['IMimeTypeGetter'] = IMimeTypeGetter
     nutils.get_contenttype.__code__ = _get_contenttype.__code__
 
+
 # plone's guessing of content types is very limited compared to what zope does;
 # let's use that instead. But many places have already imported it
 # statically by name, so swizzle out the code
-
-
 def _get_contenttype(file=None, filename=None, default='application/octet-stream'):
     file_type = getattr(file, 'contentType', None)
     if file_type:
