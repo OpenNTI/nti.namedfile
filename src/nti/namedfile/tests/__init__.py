@@ -16,26 +16,27 @@ from nti.testing.layers import ConfiguringLayerMixin
 
 import zope.testing.cleanup
 
+
 class SharedConfiguringTestLayer(ZopeComponentLayer,
-								 GCLayerMixin,
-								 ConfiguringLayerMixin):
+                                 GCLayerMixin,
+                                 ConfiguringLayerMixin):
 
-	set_up_packages = ('nti.namedfile',)
+    set_up_packages = ('nti.namedfile',)
 
-	@classmethod
-	def setUp(cls):
-		setHooks()
-		cls.setUpPackages()
+    @classmethod
+    def setUp(cls):
+        setHooks()
+        cls.setUpPackages()
 
-	@classmethod
-	def tearDown(cls):
-		cls.tearDownPackages()
-		zope.testing.cleanup.cleanUp()
+    @classmethod
+    def tearDown(cls):
+        cls.tearDownPackages()
+        zope.testing.cleanup.cleanUp()
 
-	@classmethod
-	def testSetUp(cls, test=None):
-		setHooks()
+    @classmethod
+    def testSetUp(cls, test=None):
+        setHooks()
 
-	@classmethod
-	def testTearDown(cls):
-		pass
+    @classmethod
+    def testTearDown(cls):
+        pass
