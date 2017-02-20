@@ -20,6 +20,7 @@ from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
 from plone.namedfile.interfaces import INamedBlobFile as IPloneNamedBlobFile
 from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
 
+from nti.base.interfaces import IConstrained
 from nti.base.interfaces import ILastModified
 
 from nti.mimetype.mimetype import mimeTypeConstraint
@@ -69,7 +70,7 @@ class IFileConstraints(interface.Interface):
         """
 
 
-class IFileConstrained(interface.Interface):
+class IFileConstrained(IConstrained):
     """
     Marker interface for objects that have associated :class:`.IFileConstraints`
     """
@@ -105,5 +106,5 @@ class IInternalFileRef(interface.Interface):
     """
     Marker interface for reference to an internal file
     """
-    reference = ValidTextLine(title="the internal identifier", 
+    reference = ValidTextLine(title="the internal identifier",
                               required=False)
