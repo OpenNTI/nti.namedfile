@@ -10,16 +10,17 @@ __docformat__ = "restructuredtext en"
 from hamcrest import assert_that
 from hamcrest import has_property
 
+from nti.testing.matchers import validly_provides
+
 import unittest
 
-import plone.namedfile.file as nfile
-import plone.namedfile.interfaces as nfile_interfaces
+from plone.namedfile import file as plone_file
+
+from plone.namedfile.interfaces import IFile as IPloneFile
 
 from nti.namedfile.monkey import patch
 
 from nti.namedfile.tests import SharedConfiguringTestLayer
-
-from nti.testing.matchers import validly_provides
 
 
 class TestMonkey(unittest.TestCase):
@@ -29,20 +30,22 @@ class TestMonkey(unittest.TestCase):
     def test_patch(self):
         patch()
 
-        nf = nfile.NamedFile(data=b'data',
+        nf = plone_file.NamedFile(data=b'data',
                              contentType=b'text/plain',
                              filename='foo.txt')
-        nbf = nfile.NamedBlobFile(data=b'data',
+
+        nbf = plone_file.NamedBlobFile(data=b'data',
                                   contentType=b'text/plain',
                                   filename='foo.txt')
-        nif = nfile.NamedBlobFile(data=b'data',
+
+        nif = plone_file.NamedBlobFile(data=b'data',
                                   contentType=b'image/gif',
                                   filename='foo.txt')
         for f in nf, nbf, nif:
-            assert_that(f, validly_provides(nfile_interfaces.IFile))
+            assert_that(f, validly_provides(IPloneFile))
             assert_that(f, has_property('__name__', 'foo.txt'))
 
         # Check that we sniff the data using zope.mimetype.
-        nf = nfile.NamedFile(data=b"<?xml?><config />")
-        nf.mimeType = nfile.get_contenttype(file=nf)
+        nf = plone_file.NamedFile(data=b"<?xml?><config />")
+        nf.mimeType = plone_file.get_contenttype(file=nf)
         assert_that(nf, has_property('contentType', 'text/xml'))
