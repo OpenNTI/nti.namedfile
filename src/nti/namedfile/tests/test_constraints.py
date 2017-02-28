@@ -56,3 +56,6 @@ class TestNamedFile(unittest.TestCase):
         assert_that(internal.is_file_size_allowed(), is_(True))
         assert_that(internal.is_mime_type_allowed(), is_(True))
         assert_that(internal.is_filename_allowed(), is_(True))
+        
+        internal.max_file_size = 10
+        assert_that(internal.is_file_size_allowed(15), is_(False))
