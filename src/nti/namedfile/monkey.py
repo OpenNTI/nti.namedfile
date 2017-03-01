@@ -9,7 +9,10 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
-from six import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from six import StringIO
 
 from zope import component
 
