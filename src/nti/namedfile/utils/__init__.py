@@ -24,6 +24,8 @@ from nti.namedfile.utils.jpeg_utils import process_jpeg
 
 from nti.namedfile.utils.png_utils import process_png
 
+from nti.namedfile.utils.tiff_utils import process_tiff
+
 
 def _ensure_data(image):
     data = None
@@ -58,6 +60,8 @@ def getImageInfo(data):
         if kind == 40:  # Windows 3.x bitmap
             content_type = 'image/x-ms-bmp'
             width, height = struct.unpack(b'<LL', data[18:26])
+    elif size >= 8 and data[:4] in (b"II\052\000", b"MM\000\052"):
+        content_type, width, height = process_tiff(data)
     # Use PIL / Pillow to determ Image Information
     elif data:
         try:
