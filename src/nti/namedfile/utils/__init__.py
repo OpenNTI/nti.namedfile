@@ -40,7 +40,7 @@ def _ensure_data(image):
 def getImageInfo(data):
     data = _ensure_data(data)
     size = len(data)
-    content_type = ''
+    content_type = None
     width, height = -1, -1
     # handle GIFs
     if size >= 10 and data[:6] in (b'GIF87a', b'GIF89a'):

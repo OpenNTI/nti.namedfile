@@ -15,8 +15,8 @@ import struct
 
 
 def process_png(data):
-    content_type, width, height = None, -1, -1
     size = len(data)
+    content_type, width, height = None, -1, -1
     # See PNG 2. Edition spec (http://www.w3.org/TR/PNG/)
     # Bytes 0-7 are below, 4-byte chunk length, then 'IHDR'
     # and finally the 4-byte width, height

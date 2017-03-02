@@ -18,7 +18,7 @@ except ImportError:
 
 
 def process_tiff(data):
-    content_type = u''
+    content_type = None
     width = height = -1
     # Standard TIFF, big- or little-endian
     # BigTIFF and other different but TIFF-like formats are not
