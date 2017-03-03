@@ -64,11 +64,11 @@ def process_tiff(data):
                 if type_ not in tiff_types:
                     raise Exception("Unkown TIFF field type:" +
                                     str(type_))
-                typeSize = tiff_types[type_][0]
-                typeChar = tiff_types[type_][1]
+                type_size = tiff_types[type_][0]
+                type_char = tiff_types[type_][1]
                 tiff.seek(entry_offset + 8)
-                value = tiff.read(typeSize)
-                value = int(struct.unpack(typeChar, value)[0])
+                value = tiff.read(type_size)
+                value = int(struct.unpack(type_char, value)[0])
                 if tag == 256:
                     width = value
                 else:

@@ -20,7 +20,7 @@ def process_png(data):
     # See PNG 2. Edition spec (http://www.w3.org/TR/PNG/)
     # Bytes 0-7 are below, 4-byte chunk length, then 'IHDR'
     # and finally the 4-byte width, height
-    if     size >= 24 \
+    if      size >= 24 \
         and data.startswith(b'\211PNG\r\n\032\n') \
         and data[12:16] == b'IHDR':
         content_type = 'image/png'
