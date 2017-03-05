@@ -18,8 +18,6 @@ try:
 except ImportError:
     from six import StringIO
 
-from PIL import Image
-
 from nti.namedfile.utils.jpeg_utils import process_jpeg
 
 from nti.namedfile.utils.png_utils import process_png
@@ -65,11 +63,14 @@ def getImageInfo(data):
     # Use PIL / Pillow to determ Image Information
     elif data:
         try:
+            from PIL import Image
             img = Image.open(StringIO(data))
             width, height = img.size
             content_type = img.format or  u''
             if content_type.lower() == 'tiff':
                 content_type = 'image/tiff'
+        except ImportError:
+            pass
         except Exception as e:
             logger.exception(e)
     # return
