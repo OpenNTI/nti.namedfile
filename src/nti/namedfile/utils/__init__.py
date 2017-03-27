@@ -47,10 +47,10 @@ def getImageInfo(data):
         width = int(w)
         height = int(h)
     # handle PNG
-    elif data[:8] == b'\211PNG\r\n\032\n':    
+    elif data[:8] == b'\211PNG\r\n\032\n':
         content_type, width, height = process_png(data)
     # handle JPEGs
-    elif data[:2] == b'\377\330':    
+    elif data[:2] == b'\377\330':
         content_type, width, height = process_jpeg(data)
     # handle BMPs
     elif size >= 30 and data.startswith(b'BM'):
@@ -76,4 +76,6 @@ def getImageInfo(data):
     # return
     logger.debug('Image Info (Type: %s, Width: %s, Height: %s)',
                  content_type, width, height)
+    # Type must be str
+    content_type = str(content_type)
     return content_type, width, height
