@@ -22,7 +22,7 @@ from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
-from nti.base._compat import to_unicode
+from nti.base._compat import unicode_
 
 from nti.base.mixins import CreatedAndModifiedTimeMixin
 
@@ -129,14 +129,14 @@ def safe_filename(s):
         s = re.sub(r'[/<>:;"\\|#?*\s]+', '_', s)
         s = re.sub(r'&', '_', s)
         try:
-            s = to_unicode(s)
+            s = unicode_(s)
         except UnicodeDecodeError:
             s = s.decode('utf-8')
     return s
 
+
 import zope.deferredimport
 zope.deferredimport.initialize()
-
 zope.deferredimport.deprecatedFrom(
     "Moved to nti.namedfile.constraints",
     "nti.namedfile.constraints",
