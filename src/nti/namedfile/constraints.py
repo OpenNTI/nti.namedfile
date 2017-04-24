@@ -16,7 +16,7 @@ from zope import interface
 
 from zope.mimetype.interfaces import IContentTypeAware
 
-from nti.mimetype.mimetype import mimeTypeConstraint
+from nti.mimetype.mimetype import rfc2047MimeTypeConstraint
 
 from nti.namedfile.interfaces import INamedFile
 from nti.namedfile.interfaces import IFileConstraints
@@ -51,7 +51,7 @@ class FileConstraints(object):
         mime_type = mime_type or getattr(self._v_file, 'contentType', None)
         mime_type = mime_type.lower() if mime_type else mime_type
         if (   not mime_type  # No input
-            or not mimeTypeConstraint(mime_type)  # Invalid
+            or not rfc2047MimeTypeConstraint(mime_type)  # Invalid
             or not self.allowed_mime_types):  # Empty list: all excluded
             return False
 

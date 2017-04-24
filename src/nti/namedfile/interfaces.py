@@ -23,7 +23,7 @@ from plone.namedfile.interfaces import INamedBlobImage as IPloneNamedBlobImage
 from nti.base.interfaces import IConstrained
 from nti.base.interfaces import ILastModified
 
-from nti.mimetype.mimetype import mimeTypeConstraint
+from nti.mimetype.mimetype import rfc2047MimeTypeConstraint
 
 from nti.schema.field import Int
 from nti.schema.field import ValidTextLine
@@ -36,7 +36,7 @@ class IFileConstraints(interface.Interface):
     allowed_mime_types = IndexedIterable(title="Mime types that are accepted",
                                          min_length=1,
                                          value_type=Text(title="An allowed mimetype",
-                                                         constraint=mimeTypeConstraint),
+                                                         constraint=rfc2047MimeTypeConstraint),
                                          default=['*/*'])
 
     allowed_extensions = IndexedIterable(title="Extensions like '.doc' that are accepted",
