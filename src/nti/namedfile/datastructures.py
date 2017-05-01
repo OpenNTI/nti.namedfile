@@ -14,6 +14,8 @@ from zope import interface
 
 from zope.file.upload import nameFinder
 
+from nti.base._compat import bytes_
+
 from nti.property.schema import DataURI
 
 from nti.externalization.datastructures import AbstractDynamicObjectIO
@@ -114,7 +116,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
         # contentType
         for name in ('FileMimeType', 'contentType', 'content_type', 'type'):
             if name in parsed:
-                ext_self.contentType = bytes(parsed[name])
+                ext_self.contentType = bytes_(parsed[name])
                 updated = True
                 break
         return updated
@@ -126,7 +128,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
         ext_dict['name'] = the_file.name or None
         ext_dict['filename'] = the_file.filename or None
         ext_dict[MIMETYPE] = self._ext_mimeType(the_file)
-        ext_dict['contentType'] = ext_dict['FileMimeType'] = str(contentType or u'')
+        ext_dict['contentType'] = ext_dict['FileMimeType'] = str(contentType or '')
         return ext_dict
 
 

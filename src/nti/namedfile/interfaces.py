@@ -33,23 +33,23 @@ from nti.schema.field import ValidText as Text
 
 class IFileConstraints(interface.Interface):
 
-    allowed_mime_types = IndexedIterable(title="Mime types that are accepted",
+    allowed_mime_types = IndexedIterable(title=u"Mime types that are accepted",
                                          min_length=1,
-                                         value_type=Text(title="An allowed mimetype",
+                                         value_type=Text(title=u"An allowed mimetype",
                                                          constraint=rfc2047MimeTypeConstraint),
                                          default=['*/*'])
 
-    allowed_extensions = IndexedIterable(title="Extensions like '.doc' that are accepted",
+    allowed_extensions = IndexedIterable(title=u"Extensions like '.doc' that are accepted",
                                          min_length=0,
-                                         value_type=Text(title="An allowed extension"),
+                                         value_type=Text(title=u"An allowed extension"),
                                          required=False,
                                          default=['*'])
 
-    max_file_size = Int(title="Maximum size in bytes for the file",
+    max_file_size = Int(title=u"Maximum size in bytes for the file",
                         min=1,
                         required=False)
 
-    max_files = Int(title="max attachments files", required=False, default=2)
+    max_files = Int(title=u"max attachments files", required=False, default=2)
 
     def is_file_size_allowed(size=None):
         """
@@ -81,7 +81,7 @@ class IFileConstrained(IConstrained):
 
 
 class IFile(IPloneFile, ILastModified):
-    name = ValidTextLine(title="Identifier for the file",
+    name = ValidTextLine(title=u"Identifier for the file",
                          required=False,
                          default=None)
 
@@ -106,5 +106,5 @@ class IInternalFileRef(interface.Interface):
     """
     Marker interface for reference to an internal file
     """
-    reference = ValidTextLine(title="the internal identifier",
+    reference = ValidTextLine(title=u"the internal identifier",
                               required=False)
