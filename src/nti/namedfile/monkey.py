@@ -4,7 +4,7 @@
 .. $Id$
 """
 
-from __future__ import unicode_literals, print_function, absolute_import, division
+from __future__ import print_function, absolute_import, division
 __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
@@ -15,6 +15,8 @@ except ImportError:
     from six import StringIO
 
 from zope import component
+
+from zope.file.file import File as ZFile
 
 from zope.file.interfaces import IFile as IZFile
 
@@ -32,6 +34,8 @@ from plone.namedfile.file import NamedBlobFile
 from plone.namedfile.interfaces import IFile as INFile
 
 from plone.namedfile.utils import get_contenttype
+
+from nti.base.interfaces import IFile as IBaseFile
 
 from nti.namedfile.utils import getImageInfo
 
@@ -70,6 +74,7 @@ def _patch():
 
     # size as a property (zope) vs getSize() (plone)
     NamedFile.size = property(NamedFile.getSize)
+
     # is already in the blob versions
     assert hasattr(NamedBlobFile, 'size')
 
@@ -85,6 +90,7 @@ def _patch():
         __name__ = alias('filename')
     assert len(NamedFile.__bases__) == 1
     NamedFile.__bases__ += (_Base,)
+
     assert len(NamedBlobFile.__bases__) == 1
     NamedBlobFile.__bases__ += (_Base,)
 
@@ -94,6 +100,7 @@ def _patch():
     # zope.file.file is IContentTypeAware, plonefile declares 'contentType'
     NamedFile.mimeType = alias('contentType')
     NamedBlobFile.mimeType = alias('contentType')
+
     # and it needs parameters (actually, zope.file.file doesn't get that
     # right either)
     # true this is unsafe but they are supposed to be read-only
@@ -107,6 +114,24 @@ def _patch():
     NamedFile.open = _open
     NamedFile.openDetached = _open
 
+    # make zope file have a contentType
+    ZFile.contentType = alias('mimeType')
+    # set the data
+    def _get_data(self):
+        with self.open() as fp:
+            return fp.read()
+    def _set_data(self, data=b''):
+        with self.open('w') as fp:
+            return fp.write(data)
+    ZFile.data = property(_get_data, _set_data)
+    # return its size
+    def _get_size(self):
+        return self.size
+    ZFile.getSize = _get_size
+    # and make it and base file
+    IZFile.__bases__ += (IBaseFile,)
+    
+    # patch plone get_contenttype
     func_globals = getattr(get_contenttype, 'func_globals')
     func_globals['component'] = component
     func_globals['nameFinder'] = nameFinder
