@@ -33,6 +33,7 @@ from nti.namedfile.interfaces import INamedBlobFile
 from nti.namedfile.interfaces import INamedBlobImage
 
 from nti.property.property import alias
+from nti.property.property import read_alias
 
 _nameFinder = re.compile(r'(.*[\\/:])?(.+)')
 
@@ -54,8 +55,8 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
     def __init__(self, data='', contentType='', filename=None, name=None):
         super(NamedFileMixin, self).__init__(data=data,
-                                             contentType=contentType,
-                                             filename=filename)
+                                             filename=filename,
+                                             contentType=contentType)
         self.name = name or self.nameFinder(filename)
 
     @property
@@ -77,12 +78,12 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, PloneNamedFile):
-    pass
+    size = read_alias('_size')
 
 
 @interface.implementer(INamedImage)
 class NamedImage(NamedFileMixin, PloneNamedImage):
-    pass
+    size = read_alias('_size')
 
 
 @interface.implementer(INamedBlobFile)
