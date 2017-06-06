@@ -35,7 +35,7 @@ from plone.namedfile.interfaces import IFile as INFile
 
 from plone.namedfile.utils import get_contenttype
 
-from nti.base.interfaces import INamed as IBaseFile
+from nti.base.interfaces import INamedFile as IBaseNamedFile
 
 from nti.namedfile.utils import getImageInfo
 
@@ -131,7 +131,7 @@ def _patch():
         return self.size
     ZFile.getSize = _get_size
     # and make it and base file
-    IZFile.__bases__ += (IBaseFile,)
+    IZFile.__bases__ += (IBaseNamedFile,)
     
     # patch plone get_contenttype
     func_globals = getattr(get_contenttype, 'func_globals')

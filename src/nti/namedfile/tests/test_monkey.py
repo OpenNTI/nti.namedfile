@@ -25,7 +25,7 @@ from plone.namedfile.interfaces import IFile as IPloneFile
 
 from zope.file.file import File
 
-from nti.base.interfaces import IFile
+from nti.base.interfaces import INamedFile
 
 from nti.namedfile.monkey import patch
 patch()
@@ -51,7 +51,7 @@ class TestMonkey(unittest.TestCase):
                          contentType='image/gif',
                          filename=u'foo.txt')
         for f in nf, nbf, nif:
-            assert_that(f, validly_provides(IFile))
+            assert_that(f, validly_provides(INamedFile))
             assert_that(f, validly_provides(IPloneFile))
             assert_that(f, has_property('__name__', 'foo.txt'))
 
@@ -64,8 +64,8 @@ class TestMonkey(unittest.TestCase):
 
         zf = File(mimeType='text/plain')
 
-        assert_that(zf, validly_provides(IFile))
-        assert_that(zf, verifiably_provides(IFile))
+        assert_that(zf, validly_provides(INamedFile))
+        assert_that(zf, verifiably_provides(INamedFile))
         
         assert_that(zf, has_property('contentType', is_('text/plain')))
 
