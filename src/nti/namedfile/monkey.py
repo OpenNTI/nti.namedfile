@@ -35,7 +35,7 @@ from plone.namedfile.interfaces import IFile as INFile
 
 from plone.namedfile.utils import get_contenttype
 
-from nti.base.interfaces import IFile as IBaseFile
+from nti.base.interfaces import INamed as IBaseFile
 
 from nti.namedfile.utils import getImageInfo
 
@@ -116,6 +116,8 @@ def _patch():
 
     # make zope file have a contentType
     ZFile.contentType = alias('mimeType')
+    # also have a filename
+    ZFile.filename = alias('__name__')
     # set the data
     def _get_data(self):
         with self.open() as fp:
