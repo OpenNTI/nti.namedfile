@@ -16,22 +16,22 @@
 	<include package="." file="configure_external.zcml" />
 
 	<adapter factory=".datastructures.NamedFileFactory"
-			 for="dolmen.builtins.IDict"
+			 for="nti.base.interfaces.IDict"
 			 provides="nti.externalization.interfaces.IMimeObjectFactory"
 			 name="application/vnd.nextthought.namedfile" />
 
 	<adapter factory=".datastructures.NamedImageFactory"
-			 for="dolmen.builtins.IDict"
+			 for="nti.base.interfaces.IDict"
 			 provides="nti.externalization.interfaces.IMimeObjectFactory"
 			 name="application/vnd.nextthought.namedimage" />
 			
 	<adapter factory=".datastructures.NamedBlobFileFactory"
-			 for="dolmen.builtins.IDict"
+			 for="nti.base.interfaces.IDict"
 			 provides="nti.externalization.interfaces.IMimeObjectFactory"
 			 name="application/vnd.nextthought.namedblobfile" />
  
  	<adapter factory=".datastructures.NamedBlobImageFactory"
-			 for="dolmen.builtins.IDict"
+			 for="nti.base.interfaces.IDict"
 			 provides="nti.externalization.interfaces.IMimeObjectFactory"
 			 name="application/vnd.nextthought.namedblobimage" />
 
