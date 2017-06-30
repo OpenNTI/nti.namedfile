@@ -4,7 +4,7 @@
 .. $Id$
 """
 
-from __future__ import print_function, unicode_literals, absolute_import, division
+from __future__ import print_function, absolute_import, division
 __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
@@ -15,6 +15,8 @@ from zope import interface
 
 from zope.cachedescriptors.property import readproperty
 
+from zope.deprecation import deprecated
+
 from plone.namedfile.interfaces import INamed as IPloneNamed
 
 from plone.namedfile.file import NamedFile as PloneNamedFile
@@ -22,7 +24,7 @@ from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
-from nti.base._compat import unicode_
+from nti.base._compat import text_
 
 from nti.base.mixins import CreatedAndModifiedTimeMixin
 
@@ -42,6 +44,8 @@ def name_finder(filename):
     match = _nameFinder.match(filename) if filename else None
     result = match.group(2) if match else None
     return result
+
+
 nameFinder = name_finder
 
 
@@ -76,11 +80,13 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
         return nameFinder(filename)
 
 
+deprecated('NamedFile', 'DO NOT use; prefer NamedBlobFile')
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, PloneNamedFile):
     size = read_alias('_size')
 
 
+deprecated('NamedImage', 'DO NOT use; prefer NamedBlobImage')
 @interface.implementer(INamedImage)
 class NamedImage(NamedFileMixin, PloneNamedImage):
     size = read_alias('_size')
@@ -130,7 +136,7 @@ def safe_filename(s):
         s = re.sub(r'[/<>:;"\\|#?*\s]+', '_', s)
         s = re.sub(r'&', '_', s)
         try:
-            s = unicode_(s)
+            s = text_(s)
         except UnicodeDecodeError:
             s = s.decode('utf-8')
     return s
