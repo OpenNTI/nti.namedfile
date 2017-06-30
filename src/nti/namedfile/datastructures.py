@@ -4,7 +4,7 @@
 .. $Id$
 """
 
-from __future__ import print_function, unicode_literals, absolute_import, division
+from __future__ import print_function, absolute_import, division
 __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
@@ -59,7 +59,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
         return ()
 
     def _ext_mimeType(self, obj):
-        return u'application/vnd.nextthought.namedfile'
+        return 'application/vnd.nextthought.namedfile'
 
     def is_internal_fileref(self, parsed):
         return parsed.get(OID) or parsed.get(NTIID)
@@ -121,8 +121,8 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
                 break
         return updated
 
-    def toExternalObject(self, mergeFrom=None, **kwargs):
-        ext_dict = super(NamedFileObjectIO, self).toExternalObject(**kwargs)
+    def toExternalObject(self, *args, **kwargs):
+        ext_dict = super(NamedFileObjectIO, self).toExternalObject(*args, **kwargs)
         the_file = self._ext_replacement()
         contentType = the_file.contentType
         ext_dict['name'] = the_file.name or None
@@ -136,31 +136,34 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 class NamedImageObjectIO(NamedFileObjectIO):
 
     def _ext_mimeType(self, obj):
-        return u'application/vnd.nextthought.namedimage'
+        return 'application/vnd.nextthought.namedimage'
 
 
 @component.adapter(INamedBlobFile)
 class NamedBlobFileObjectIO(NamedFileObjectIO):
 
     def _ext_mimeType(self, obj):
-        return u'application/vnd.nextthought.namedblobfile'
+        return 'application/vnd.nextthought.namedblobfile'
 
 
 @component.adapter(INamedBlobImage)
 class NamedBlobImageObjectIO(NamedFileObjectIO):
 
     def _ext_mimeType(self, obj):
-        return u'application/vnd.nextthought.namedblobimage'
+        return 'application/vnd.nextthought.namedblobimage'
 
+
+def getContentType(ext_obj):
+    return ext_obj.get('FileMimeType') \
+        or ext_obj.get('contentType')  \
+        or ext_obj.get('content_type')
 
 def BaseFactory(ext_obj, file_factory, image_factory=None):
     factory = file_factory
     image_factory = image_factory or file_factory
     url = ext_obj.get('url') or ext_obj.get('value')
-    contentType =  ext_obj.get('FileMimeType') \
-                or ext_obj.get('contentType')  \
-                or ext_obj.get('content_type')
-    if url and url.startswith(b'data:'):
+    contentType = getContentType(ext_obj)
+    if url and url.startswith('data:'):
         ext_obj['url'] = DataURL(url)
         ext_obj.pop('value', None)
         if ext_obj['url'].mimeType.startswith('image/'):

@@ -37,6 +37,7 @@ from nti.namedfile.interfaces import INamedBlobImage
 from nti.property.property import alias
 from nti.property.property import read_alias
 
+
 _nameFinder = re.compile(r'(.*[\\/:])?(.+)')
 
 
@@ -44,8 +45,6 @@ def name_finder(filename):
     match = _nameFinder.match(filename) if filename else None
     result = match.group(2) if match else None
     return result
-
-
 nameFinder = name_finder
 
 

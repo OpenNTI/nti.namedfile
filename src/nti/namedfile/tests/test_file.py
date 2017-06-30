@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, unicode_literals, absolute_import, division
+from __future__ import print_function, absolute_import, division
 __docformat__ = "restructuredtext en"
 
 # disable: accessing protected members, too many methods
@@ -45,10 +45,10 @@ class TestNamedFile(unittest.TestCase):
 
     def test_namedfile(self):
         ext_obj = {
-            'MimeType': 'application/vnd.nextthought.namedfile',
+            'MimeType': 'application/vnd.nextthought.namedblobfile',
             'value': GIF_DATAURL,
-            'filename': r'file.gif',
-            'name': 'ichigo'
+            'filename': u'file.gif',
+            'name': u'ichigo'
         }
 
         factory = find_factory_for(ext_obj)
@@ -89,8 +89,8 @@ class TestNamedFile(unittest.TestCase):
 
     def test_interface(self):
         for factory in (NamedBlobFile,
-                        NamedFile, 
-                        PloneNamedFile, 
+                        NamedFile,
+                        PloneNamedFile,
                         PloneNamedBlobFile):
             s = factory()
             assert_that(s, validly_provides(IFile))

@@ -4,7 +4,7 @@
 .. $Id$
 """
 
-from __future__ import print_function, unicode_literals, absolute_import, division
+from __future__ import print_function, absolute_import, division
 __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
@@ -37,13 +37,13 @@ class IFileConstraints(interface.Interface):
                                          min_length=1,
                                          value_type=Text(title=u"An allowed mimetype",
                                                          constraint=rfc2047MimeTypeConstraint),
-                                         default=['*/*'])
+                                         default=[u'*/*'])
 
     allowed_extensions = IndexedIterable(title=u"Extensions like '.doc' that are accepted",
                                          min_length=0,
                                          value_type=Text(title=u"An allowed extension"),
                                          required=False,
-                                         default=['*'])
+                                         default=[u'*'])
 
     max_file_size = Int(title=u"Maximum size in bytes for the file",
                         min=1,

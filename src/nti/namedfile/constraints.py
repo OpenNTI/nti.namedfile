@@ -4,7 +4,7 @@
 .. $Id$
 """
 
-from __future__ import print_function, unicode_literals, absolute_import, division
+from __future__ import print_function, absolute_import, division
 __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
@@ -26,14 +26,14 @@ from nti.namedfile.interfaces import IFileConstraints
 @interface.implementer(IFileConstraints, IContentTypeAware)
 class FileConstraints(object):
 
-    mimeType = mime_type = u'application/vnd.nextthought.namedfileconstraints'
+    mimeType = mime_type = 'application/vnd.nextthought.namedfileconstraints'
 
     _v_file = None
 
     max_files = 2
     max_file_size = None
-    allowed_extensions = ('*',)
-    allowed_mime_types = ("*/*",)
+    allowed_extensions = (u'*',)
+    allowed_mime_types = (u"*/*",)
 
     parameters = {}  # IContentTypeAware
 
