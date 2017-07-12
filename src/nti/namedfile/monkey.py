@@ -9,10 +9,7 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from six import StringIO
+from io import BytesIO
 
 from zope import component
 
@@ -112,7 +109,7 @@ def _patch():
     # plone's non-blob-based files don't have open/openDetached,
     # so we fake it
     def _open(self, mode='r'):
-        return StringIO(self.data)
+        return BytesIO(self.data)
     NamedFile.open = _open
     NamedFile.openDetached = _open
 
