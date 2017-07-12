@@ -5,7 +5,6 @@
 """
 
 from __future__ import print_function, absolute_import, division
-from zope.cachedescriptors.property import readproperty
 __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
@@ -16,6 +15,8 @@ except ImportError:
     from six import StringIO
 
 from zope import component
+
+from zope.cachedescriptors.property import readproperty
 
 from zope.file.file import File as ZFile
 
@@ -121,7 +122,7 @@ def _patch():
     ZFile.filename = alias('__name__')
     # also have a display name
     def _name(self):
-        return self.filename
+        return nameFinder(self)
     ZFile.name = readproperty(_name)
     # set the data
     def _get_data(self):
