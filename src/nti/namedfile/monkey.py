@@ -118,6 +118,8 @@ def _patch():
     ZFile.contentType = alias('mimeType')
     # also have a filename
     ZFile.filename = alias('__name__')
+    # also have a display name
+    ZFile.name = None
     # set the data
     def _get_data(self):
         with self.open() as fp:
