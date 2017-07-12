@@ -63,12 +63,20 @@ class TestMonkey(unittest.TestCase):
     def test_zope_file_patch(self):
 
         zf = File(mimeType='text/plain')
+        zf.filename = 'data.txt'
 
         assert_that(zf, validly_provides(INamedFile))
         assert_that(zf, verifiably_provides(INamedFile))
         
+        assert_that(zf, has_property('name', is_('data.txt')))
+        assert_that(zf, has_property('filename', is_('data.txt')))
         assert_that(zf, has_property('contentType', is_('text/plain')))
 
         zf.data = b'data'
         assert_that(zf.getSize(), is_(4))
         assert_that(zf.data, is_(b'data'))
+        
+        zf.name = 'data'
+        assert_that(zf, has_property('name', is_('data')))
+        assert_that(zf, has_property('filename', is_('data.txt')))
+
