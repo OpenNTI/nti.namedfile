@@ -38,7 +38,6 @@ class TestMonkey(unittest.TestCase):
     layer = SharedConfiguringTestLayer
 
     def test_plone_file_patch(self):
-
         nf = NamedFile(data=b'data',
                        contentType='text/plain',
                        filename=u'foo.txt')
@@ -61,7 +60,6 @@ class TestMonkey(unittest.TestCase):
         assert_that(nf, has_property('contentType', 'text/xml'))
         
     def test_zope_file_patch(self):
-
         zf = File(mimeType='text/plain')
         zf.filename = 'data.txt'
 
@@ -79,4 +77,3 @@ class TestMonkey(unittest.TestCase):
         zf.name = 'data'
         assert_that(zf, has_property('name', is_('data')))
         assert_that(zf, has_property('filename', is_('data.txt')))
-

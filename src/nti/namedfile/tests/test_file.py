@@ -32,9 +32,9 @@ from nti.externalization.internalization import update_from_external_object
 from nti.namedfile.file import NamedFile
 from nti.namedfile.file import NamedBlobFile
 
-from nti.namedfile.tests import SharedConfiguringTestLayer
-
 from nti.externalization.tests import externalizes
+
+from nti.namedfile.tests import SharedConfiguringTestLayer
 
 GIF_DATAURL = b'data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw=='
 

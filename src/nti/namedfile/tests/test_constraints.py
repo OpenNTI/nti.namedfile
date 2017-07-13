@@ -16,12 +16,13 @@ does_not = is_not
 
 import unittest
 
-from nti.namedfile.file import NamedBlobFile
 from nti.namedfile.constraints import FileConstraints
 
-from nti.namedfile.tests import SharedConfiguringTestLayer
+from nti.namedfile.file import NamedBlobFile
 
 from nti.externalization.tests import externalizes
+
+from nti.namedfile.tests import SharedConfiguringTestLayer
 
 
 class TestNamedFile(unittest.TestCase):
