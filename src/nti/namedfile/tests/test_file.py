@@ -23,8 +23,7 @@ import unittest
 from plone.namedfile.file import NamedFile as PloneNamedFile
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 
-from nti.base.interfaces import IFile
-from nti.base.interfaces import INamed
+from nti.base.interfaces import INamedFile
 
 from nti.externalization.internalization import find_factory_for
 from nti.externalization.internalization import update_from_external_object
@@ -93,5 +92,4 @@ class TestNamedFile(unittest.TestCase):
                         PloneNamedFile,
                         PloneNamedBlobFile):
             s = factory()
-            assert_that(s, validly_provides(IFile))
-            assert_that(s, validly_provides(INamed))
+            assert_that(s, validly_provides(INamedFile))

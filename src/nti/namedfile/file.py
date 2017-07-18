@@ -79,13 +79,13 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
         return nameFinder(filename)
 
 
-deprecated('NamedFile', 'DO NOT use; prefer NamedBlobFile')
+deprecated('NamedFile', 'DO NOT USE; Prefer NamedBlobFile')
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, PloneNamedFile):
     size = read_alias('_size')
 
 
-deprecated('NamedImage', 'DO NOT use; prefer NamedBlobImage')
+deprecated('NamedImage', 'DO NOT USE; Prefer NamedBlobImage')
 @interface.implementer(INamedImage)
 class NamedImage(NamedFileMixin, PloneNamedImage):
     size = read_alias('_size')

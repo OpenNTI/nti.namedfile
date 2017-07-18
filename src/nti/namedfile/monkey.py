@@ -34,7 +34,7 @@ from plone.namedfile.interfaces import IFile as INFile
 
 from plone.namedfile.utils import get_contenttype
 
-from nti.base.interfaces import INamedFile as IBaseNamedFile
+from nti.base.interfaces import INamedFile
 
 from nti.namedfile.utils import getImageInfo
 
@@ -106,6 +106,11 @@ def _patch():
     NamedFile.parameters = {}
     NamedBlobFile.parameters = {}
 
+    def _name(self):
+        return nameFinder(self)
+    NamedFile.name = readproperty(_name)
+    NamedBlobFile.name = readproperty(_name)
+     
     # plone's non-blob-based files don't have open/openDetached,
     # so we fake it
     def _open(self, mode='r'):
@@ -118,8 +123,6 @@ def _patch():
     # also have a filename
     ZFile.filename = alias('__name__')
     # also have a display name
-    def _name(self):
-        return nameFinder(self)
     ZFile.name = readproperty(_name)
     # set the data
     def _get_data(self):
@@ -134,7 +137,7 @@ def _patch():
         return self.size
     ZFile.getSize = _get_size
     # and make it and base file
-    IZFile.__bases__ += (IBaseNamedFile,)
+    IZFile.__bases__ += (INamedFile,)
     
     # patch plone get_contenttype
     func_globals = getattr(get_contenttype, 'func_globals')
