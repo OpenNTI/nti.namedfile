@@ -53,9 +53,7 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
     content_type = alias('contentType')
 
     def __init__(self, data='', contentType='', filename=None, name=None):
-        super(NamedFileMixin, self).__init__(data=data,
-                                             filename=filename,
-                                             contentType=contentType)
+        super(NamedFileMixin, self).__init__(data, contentType, filename)
         self.name = name or self.nameFinder(filename)
 
     @property

@@ -35,7 +35,7 @@ from nti.externalization.tests import externalizes
 
 from nti.namedfile.tests import SharedConfiguringTestLayer
 
-GIF_DATAURL = b'data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw=='
+GIF_DATAURL = 'data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw=='
 
 
 class TestNamedFile(unittest.TestCase):
@@ -108,10 +108,11 @@ class TestNamedFile(unittest.TestCase):
         assert_that(s, is_('shikai.zip'))
 
     def test_nameblob(self):
-        s = NamedBlobFile()
-        s.name = 'blob'
-        s.data = GIF_DATAURL
+        s = NamedBlobFile(GIF_DATAURL, 'image/gif', u'image.gif')
         assert_that(s, has_property('size', is_(106)))
+        assert_that(s, has_property('data', is_(GIF_DATAURL)))
+        assert_that(s, has_property('filename', is_('image.gif')))
+        assert_that(s, has_property('contentType', is_('image/gif')))
         s.size = 888
         assert_that(s, has_property('size', is_(106)))
 
