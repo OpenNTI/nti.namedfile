@@ -131,7 +131,7 @@ class NamedBlobImage(NamedFileMixin, PloneNamedBlobImage):
         pass
 
 
-def get_file_name(context):
+def get_context_name(context):
     result = None
     if hasattr(context, 'name'):
         result = context.name
@@ -139,6 +139,7 @@ def get_file_name(context):
         result = NamedFileMixin.nameFinder(context.filename) \
               or context.filename
     return result
+get_file_name = get_context_name
 
 
 def safe_filename(s):
