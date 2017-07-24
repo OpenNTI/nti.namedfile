@@ -42,6 +42,35 @@ class TestNamedFile(unittest.TestCase):
 
     layer = SharedConfiguringTestLayer
 
+    def test_model(self):
+        internal = NamedBlobFile()
+        assert_that(internal, has_property('name', is_(none())))
+        internal.name = u'aizen'
+        assert_that(internal, has_property('name', is_('aizen')))
+        assert_that(internal, has_property('__name__', is_('aizen')))
+        internal.__name__ = u'ichigo'
+        assert_that(internal, has_property('name', is_('ichigo')))
+        assert_that(internal, has_property('__name__', is_('ichigo')))
+        assert_that(internal.__dict__, does_not(has_key('__name__')))
+
+        internal.__name__ = internal.name = u'toshiro'
+        assert_that(internal, has_property('name', is_('toshiro')))
+        assert_that(internal, has_property('__name__', is_('toshiro')))
+        assert_that(internal.__dict__, does_not(has_key('__name__')))
+        
+        # test in case __name__ is in dict
+        internal.__dict__['__name__'] = u'rukia'
+        assert_that(internal, has_property('__name__', is_('rukia')))
+        internal.name = u'zaraki'
+        assert_that(internal, has_property('name', is_('zaraki')))
+        assert_that(internal, has_property('__name__', is_('zaraki')))
+        assert_that(internal.__dict__, has_key('__name__'))
+
+        internal.__name__ = u'ichigo'
+        assert_that(internal, has_property('name', is_('ichigo')))
+        assert_that(internal, has_property('__name__', is_('ichigo')))
+        assert_that(internal.__dict__, has_key('__name__'))
+        
     def test_namedfile(self):
         ext_obj = {
             'MimeType': 'application/vnd.nextthought.namedblobfile',

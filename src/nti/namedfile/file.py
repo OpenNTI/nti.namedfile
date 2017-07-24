@@ -13,8 +13,6 @@ import re
 
 from zope import interface
 
-from zope.cachedescriptors.property import readproperty
-
 from zope.deprecation import deprecated
 
 from plone.namedfile.file import NamedFile as PloneNamedFile
@@ -28,7 +26,6 @@ from nti.base.interfaces import INamed
 
 from nti.base.mixins import CreatedAndModifiedTimeMixin
 
-from nti.namedfile.interfaces import IFile
 from nti.namedfile.interfaces import INamedFile
 from nti.namedfile.interfaces import INamedImage
 from nti.namedfile.interfaces import INamedBlobFile
@@ -51,7 +48,6 @@ nameFinder = name_finder
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
     name = None
-
     __parent__ = None
 
     content_type = alias('contentType')
@@ -66,9 +62,29 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
     def length(self):
         return self.getSize()
 
-    @readproperty
-    def __name__(self):
-        return self.name
+    # XXX: Sadly we had defined the __name__ as a 
+    # readproperty on this object instead of alias for name.
+    # so whenever __name__ is set it sets an additional entry on 
+    # this object __dict__, which we did not want. So we now override
+    # __getattribute__ and __setattr__ to implement the alias
+    # functionality between __name__ and name and while respecting
+    # previously set values on both properties
+    def __getattribute__(self, name):
+        if name == '__name__':
+            if name in self.__dict__:
+                return self.__dict__[name]
+            return super(NamedFileMixin, self).__getattribute__('name')
+        return super(NamedFileMixin, self).__getattribute__(name)
+
+    def __setattr__(self, name, value):
+        if name == '__name__':
+            if name in self.__dict__:
+                self.__dict__[name] = value
+            return super(NamedFileMixin, self).__setattr__('name', value)
+        elif name == 'name':
+            if '__name__' in self.__dict__:
+                self.__dict__['__name__'] = value
+        return super(NamedFileMixin, self).__setattr__(name, value)
 
     def __str__(self):
         return "%s(%r)" % (self.__class__.__name__, self.name)
@@ -117,7 +133,7 @@ class NamedBlobImage(NamedFileMixin, PloneNamedBlobImage):
 
 def get_file_name(context):
     result = None
-    if IFile.providedBy(context):
+    if hasattr(context, 'name'):
         result = context.name
     if not result and INamed.providedBy(context):
         result = NamedFileMixin.nameFinder(context.filename) \
