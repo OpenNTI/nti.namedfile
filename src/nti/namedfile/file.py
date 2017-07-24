@@ -62,13 +62,13 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
     def length(self):
         return self.getSize()
 
-    # XXX: Sadly we had defined the __name__ as a 
+    # XXX: Sadly we had defined the property __name__ as a 
     # readproperty on this object instead of alias for name.
-    # so whenever __name__ is set it sets an additional entry on 
-    # this object __dict__, which we did not want. So we now override
-    # __getattribute__ and __setattr__ to implement the alias
-    # functionality between __name__ and name and while respecting
-    # previously set values on both properties
+    # so whenever __name__ is set it creates an additional entry on 
+    # this object __dict__, which we do not want. So now we override
+    # the __getattribute__ and __setattr__  methods to implement the alias
+    # functionality between the __name__ and name properties, while 
+    # respecting  previously set values on both
     def __getattribute__(self, name):
         if name == '__name__':
             if name in self.__dict__:
