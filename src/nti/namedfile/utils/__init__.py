@@ -32,14 +32,14 @@ def _ensure_data(image):
         image.seek(0)
     else:
         data = image
-    return str(data)
+    return str(data) if data else ''
 
 
 def getImageInfo(data):
-    data = _ensure_data(data)
-    size = len(data)
     content_type = None
     width, height = -1, -1
+    data = _ensure_data(data)
+    size = len(data)
     # handle GIFs
     if size >= 10 and data[:6] in (b'GIF87a', b'GIF89a'):
         content_type = 'image/gif'
@@ -77,5 +77,5 @@ def getImageInfo(data):
     logger.debug('Image Info (Type: %s, Width: %s, Height: %s)',
                  content_type, width, height)
     # Type must be str
-    content_type = str(content_type)
+    content_type = str(content_type) if content_type else ''
     return content_type, width, height
