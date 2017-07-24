@@ -17,14 +17,14 @@ from zope.cachedescriptors.property import readproperty
 
 from zope.deprecation import deprecated
 
-from plone.namedfile.interfaces import INamed as IPloneNamed
-
 from plone.namedfile.file import NamedFile as PloneNamedFile
 from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
 from nti.base._compat import text_
+
+from nti.base.interfaces import INamed
 
 from nti.base.mixins import CreatedAndModifiedTimeMixin
 
@@ -119,7 +119,7 @@ def get_file_name(context):
     result = None
     if IFile.providedBy(context):
         result = context.name
-    if not result and IPloneNamed.providedBy(context):
+    if not result and INamed.providedBy(context):
         result = NamedFileMixin.nameFinder(context.filename) \
               or context.filename
     return result
