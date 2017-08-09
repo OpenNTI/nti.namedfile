@@ -14,7 +14,7 @@ from zope import interface
 
 from zope.file.upload import nameFinder
 
-from nti.base._compat import bytes_
+from nti.base._compat import text_
 
 from nti.property.schema import DataURI
 
@@ -58,7 +58,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
     def _ext_all_possible_keys(self):
         return ()
 
-    def _ext_mimeType(self, obj):
+    def _ext_mimeType(self, unused_obj):
         return 'application/vnd.nextthought.namedfile'
 
     def is_internal_fileref(self, parsed):
@@ -116,7 +116,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
         # contentType
         for name in ('FileMimeType', 'contentType', 'content_type', 'type'):
             if name in parsed:
-                ext_self.contentType = bytes_(parsed[name])
+                ext_self.contentType = text_(parsed[name])
                 updated = True
                 break
         return updated
@@ -128,28 +128,28 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
         ext_dict['name'] = the_file.name or None
         ext_dict['filename'] = the_file.filename or None
         ext_dict[MIMETYPE] = self._ext_mimeType(the_file)
-        ext_dict['contentType'] = ext_dict['FileMimeType'] = str(contentType or '')
+        ext_dict['contentType'] = ext_dict['FileMimeType'] = text_(contentType or '')
         return ext_dict
 
 
 @component.adapter(INamedImage)
 class NamedImageObjectIO(NamedFileObjectIO):
 
-    def _ext_mimeType(self, obj):
+    def _ext_mimeType(self, unused_obj):
         return 'application/vnd.nextthought.namedimage'
 
 
 @component.adapter(INamedBlobFile)
 class NamedBlobFileObjectIO(NamedFileObjectIO):
 
-    def _ext_mimeType(self, obj):
+    def _ext_mimeType(self, unused_obj):
         return 'application/vnd.nextthought.namedblobfile'
 
 
 @component.adapter(INamedBlobImage)
 class NamedBlobImageObjectIO(NamedFileObjectIO):
 
-    def _ext_mimeType(self, obj):
+    def _ext_mimeType(self, unused_obj):
         return 'application/vnd.nextthought.namedblobimage'
 
 
