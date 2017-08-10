@@ -160,6 +160,7 @@ def getContentType(ext_obj):
         or ext_obj.get('contentType')  \
         or ext_obj.get('content_type')
 
+
 def BaseFactory(ext_obj, file_factory, image_factory=None):
     factory = file_factory
     image_factory = image_factory or file_factory
