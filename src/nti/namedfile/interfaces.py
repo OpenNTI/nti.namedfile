@@ -14,7 +14,7 @@ plonefile_zopefile_patch_on_import.patch()
 
 from zope import interface
 
-from zope.schema import NativeStringLine
+from zope.schema import BytesLine
 
 from plone.namedfile.interfaces import IFile as IPloneFile
 from plone.namedfile.interfaces import INamedFile as IPloneNamedFile
@@ -89,7 +89,7 @@ class IFile(IPloneFile, ILastModified):
                          required=False,
                          default=None)
     
-    contentType = Variant((ValidTextLine(), NativeStringLine()),
+    contentType = Variant((ValidTextLine(), BytesLine()),
                           title=u'Content type', required=False,
                           default='',
                           missing_value='')

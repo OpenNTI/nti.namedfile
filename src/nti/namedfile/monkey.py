@@ -35,12 +35,12 @@ from plone.namedfile.interfaces import IFile as INFile
 from plone.namedfile.utils import get_contenttype
 
 from nti.base.interfaces import INamedFile
+from nti.base.interfaces import DEFAULT_CONTENT_TYPE as OCTET_STREAM
 
 from nti.namedfile.utils import getImageInfo
 
 from nti.property.property import alias
 
-OCTET_STREAM = 'application/octet-stream'
 
 
 # plone's guessing of content types is very limited compared to what zope does;
