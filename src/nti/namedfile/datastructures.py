@@ -14,8 +14,8 @@ from zope import interface
 
 from zope.file.upload import nameFinder
 
-from nti.base._compat import bytes_
 from nti.base._compat import text_
+from nti.base._compat import bytes_
 
 from nti.property.schema import DataURI
 
