@@ -14,6 +14,7 @@ from zope import interface
 
 from zope.file.upload import nameFinder
 
+from nti.base._compat import bytes_
 from nti.base._compat import text_
 
 from nti.property.schema import DataURI
@@ -114,9 +115,10 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
             ext_self.name = safe_filename(name)
 
         # contentType
+        # XXX: We are IContentTypeAware constrained to have ASCII `mimeType`
         for name in ('FileMimeType', 'contentType', 'content_type', 'type'):
             if name in parsed:
-                ext_self.contentType = text_(parsed[name])
+                ext_self.contentType = bytes_(parsed[name])
                 updated = True
                 break
         return updated
