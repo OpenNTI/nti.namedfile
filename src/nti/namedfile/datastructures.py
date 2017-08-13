@@ -101,6 +101,9 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
             ext_self.data = data_url.data
             updated = True
 
+        if name and not parsed.get('filename', None):
+            parsed['filename'] = name
+
         if 'filename' in parsed:
             ext_self.filename = parsed['filename']
             # some times we get full paths
@@ -109,10 +112,11 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
                 ext_self.filename = name_found
             name = safe_filename(ext_self.filename if not name else name)
             updated = True
-
-        # file id
-        if name is not None:
-            ext_self.name = safe_filename(name)
+        elif name:
+            name = safe_filename(name)
+        # display name
+        if name and name != ext_self.filename:
+            ext_self.name = name
 
         # contentType
         # XXX: We are IContentTypeAware constrained to have ASCII `mimeType`
@@ -127,8 +131,8 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
         ext_dict = super(NamedFileObjectIO, self).toExternalObject(*args, **kwargs)
         the_file = self._ext_replacement()
         contentType = the_file.contentType
-        ext_dict['name'] = the_file.name or None
-        ext_dict['filename'] = the_file.filename or None
+        ext_dict['name'] = the_file.name
+        ext_dict['filename'] = the_file.filename
         ext_dict[MIMETYPE] = self._ext_mimeType(the_file)
         ext_dict['contentType'] = ext_dict['FileMimeType'] = text_(contentType or '')
         return ext_dict
