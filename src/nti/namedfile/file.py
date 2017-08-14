@@ -76,8 +76,6 @@ def safe_filename(s):
 
 class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
-    key_attribute = 'name'
-
     __parent__ = None
 
     content_type = alias('contentType')
