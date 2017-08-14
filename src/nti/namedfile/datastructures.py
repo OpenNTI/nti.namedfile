@@ -28,8 +28,6 @@ from nti.namedfile.file import NamedImage
 from nti.namedfile.file import NamedBlobFile
 from nti.namedfile.file import NamedBlobImage
 
-from nti.namedfile.file import safe_filename
-
 from nti.namedfile.interfaces import INamedFile
 from nti.namedfile.interfaces import INamedImage
 from nti.namedfile.interfaces import INamedBlobFile
@@ -110,10 +108,8 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
             name_found = nameFinder(ext_self)
             if name_found:
                 ext_self.filename = name_found
-            name = safe_filename(ext_self.filename if not name else name)
+            name = ext_self.filename if not name else name
             updated = True
-        elif name:
-            name = safe_filename(name)
         # display name
         if name and name != ext_self.filename:
             ext_self.name = name
