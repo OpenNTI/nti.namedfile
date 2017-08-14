@@ -17,6 +17,8 @@ from zope.cachedescriptors.property import readproperty
 
 from zope.deprecation import deprecated
 
+from zope.file.upload import nameFinder
+
 from plone.namedfile.file import NamedFile as PloneNamedFile
 from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
@@ -37,23 +39,12 @@ from nti.property.property import alias
 from nti.property.property import read_alias
 
 
-_nameFinder = re.compile(r'(.*[\\/:])?(.+)')
-
-
-def name_finder(filename):
-    match = _nameFinder.match(filename) if filename else None
-    result = match.group(2) if match else None
-    return result
-nameFinder = name_finder
-
-
 def get_context_name(context):
     result = None
     if hasattr(context, 'name'):
         result = context.name
     if not result and INamed.providedBy(context):
-        result = NamedFileMixin.nameFinder(context.filename) \
-              or context.filename
+        result = nameFinder(context)
     return result
 get_file_name = get_context_name
 
@@ -91,7 +82,7 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
 
     @readproperty
     def name(self):
-        return safe_filename(nameFinder(self.filename))
+        return nameFinder(self)
 
     # XXX: Sadly we have defined the property __name__ as a
     # readproperty on the name property instead of filename
@@ -104,10 +95,6 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
     def __str__(self):
         return "%s(%r)" % (self.__class__.__name__, self.name)
     __repr__ = __str__
-
-    @classmethod
-    def nameFinder(cls, filename):
-        return nameFinder(filename)
 
 
 deprecated('NamedFile', 'DO NOT USE; Prefer NamedBlobFile')
