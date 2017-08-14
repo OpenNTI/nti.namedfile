@@ -83,7 +83,7 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
     content_type = alias('contentType')
 
     def __init__(self, data='', contentType='', filename=None, name=None):
-        super(NamedFileMixin, self).__init__(data, contentType, filename)
+        super(NamedFileMixin, self).__init__(data, contentType, filename or name)
         if name:
             self.name = name
 
@@ -95,29 +95,13 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
     def name(self):
         return safe_filename(nameFinder(self.filename))
 
-    # XXX: Sadly we had defined the property __name__ as a
-    # readproperty on this object instead of alias for name.
+    # XXX: Sadly we have defined the property __name__ as a
+    # readproperty on the name property instead of filename
     # so whenever __name__ is set it creates an additional entry on
-    # this object __dict__, which we do not want. So now we override
-    # the __getattribute__ and __setattr__  methods to implement the alias
-    # functionality between the __name__ and name properties, while
-    # respecting  previously set values on both
-    def __getattribute__(self, name):
-        if name == '__name__':
-            if name in self.__dict__:
-                return self.__dict__[name]
-            return super(NamedFileMixin, self).__getattribute__(self.key_attribute)
-        return super(NamedFileMixin, self).__getattribute__(name)
-
-    def __setattr__(self, name, value):
-        if name == '__name__':
-            if name in self.__dict__:
-                self.__dict__[name] = value
-            return super(NamedFileMixin, self).__setattr__(self.key_attribute, value)
-        elif name == self.key_attribute:
-            if '__name__' in self.__dict__:
-                self.__dict__['__name__'] = value
-        return super(NamedFileMixin, self).__setattr__(name, value)
+    # this object __dict__, which we did not want.
+    @readproperty
+    def __name__(self):
+        return self.name
 
     def __str__(self):
         return "%s(%r)" % (self.__class__.__name__, self.name)
