@@ -19,7 +19,6 @@ import unittest
 from plone.namedfile.file import NamedFile
 from plone.namedfile.file import NamedImage
 from plone.namedfile.file import NamedBlobFile
-from plone.namedfile.file import get_contenttype
 
 from plone.namedfile.interfaces import IFile as IPloneFile
 
@@ -53,11 +52,6 @@ class TestMonkey(unittest.TestCase):
             assert_that(f, validly_provides(INamedFile))
             assert_that(f, validly_provides(IPloneFile))
             assert_that(f, has_property('__name__', 'foo.txt'))
-
-        # Check that we sniff the data using zope.mimetype.
-        nf = NamedFile(data=b"<?xml?><config />")
-        nf.mimeType = get_contenttype(file=nf)
-        assert_that(nf, has_property('contentType', 'text/xml'))
         
     def test_zope_file_patch(self):
         zf = File(mimeType='text/plain')
