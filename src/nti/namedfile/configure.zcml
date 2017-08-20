@@ -46,15 +46,5 @@
 		
 	<adapter factory=".datastructures.NamedBlobImageObjectIO"
 			 for=".interfaces.INamedBlobImage"  />
-	
-	<configure zcml:condition="have devmode">
-		<utility provides="zope.mimetype.interfaces.IMimeTypeGetter"
-				 component="zope.mimetype.typegetter.smartMimeTypeGuesser" />
-
-		<utility provides="zope.mimetype.interfaces.ICharsetGetter"
-				 component="zope.mimetype.typegetter.charsetGetter" />
-
-		<adapter factory="zope.mimetype.contentinfo.ContentInfo"/>
-	</configure>
 
 </configure>
