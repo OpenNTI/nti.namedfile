@@ -9,6 +9,8 @@ __docformat__ = "restructuredtext en"
 
 logger = __import__('logging').getLogger(__name__)
 
+import mimetypes
+
 from io import BytesIO
 
 from zope import component
@@ -51,10 +53,14 @@ def _patched_get_contenttype(file=None, filename=None, default=OCTET_STREAM):
         return file_type
     filename = getattr(file, 'filename', filename)
 
-    mimeTypeGetter = component.getUtility(IMimeTypeGetter)
-    mimeType = mimeTypeGetter(data=getattr(file, 'data', None),
-                              content_type=None,
-                              name=nameFinder(filename))
+    mimeTypeGetter = component.queryUtility(IMimeTypeGetter)
+    if mimeTypeGetter is not None:
+        mimeType = mimeTypeGetter(data=getattr(file, 'data', None),
+                                  content_type=None,
+                                  name=nameFinder(filename))
+    else:
+        name = nameFinder(filename) if filename else None
+        mimeType = mimetypes.guess_type(name)[0] if name else None
     return mimeType or default
 
 
