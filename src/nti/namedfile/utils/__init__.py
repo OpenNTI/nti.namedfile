@@ -18,6 +18,8 @@ try:
 except ImportError:
     from six import StringIO
 
+from nti.base._compat import native_
+
 from nti.namedfile.utils.jpeg_utils import process_jpeg
 
 from nti.namedfile.utils.png_utils import process_png
@@ -32,7 +34,7 @@ def _ensure_data(image):
         image.seek(0)
     else:
         data = image
-    return str(data) if data else ''
+    return native_(data) if data else ''
 
 
 def getImageInfo(data):
@@ -66,7 +68,7 @@ def getImageInfo(data):
             from PIL import Image
             img = Image.open(StringIO(data))
             width, height = img.size
-            content_type = img.format or  u''
+            content_type = img.format or ''
             if content_type.lower() == 'tiff':
                 content_type = 'image/tiff'
         except ImportError:
