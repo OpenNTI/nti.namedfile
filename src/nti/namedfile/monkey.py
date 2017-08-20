@@ -42,7 +42,6 @@ from nti.namedfile.utils import getImageInfo
 from nti.property.property import alias
 
 
-
 # plone's guessing of content types is very limited compared to what zope does;
 # let's use that instead. But many places have already imported it
 # statically by name, so swizzle out the code
@@ -113,7 +112,7 @@ def _patch():
      
     # plone's non-blob-based files don't have open/openDetached,
     # so we fake it
-    def _open(self, mode='r'):
+    def _open(self, *unused_args, **unused_kwargs):
         return BytesIO(self.data)
     NamedFile.open = _open
     NamedFile.openDetached = _open
