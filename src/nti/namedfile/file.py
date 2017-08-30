@@ -101,16 +101,20 @@ deprecated('NamedFile', 'DO NOT USE; Prefer NamedBlobFile')
 @interface.implementer(INamedFile)
 class NamedFile(NamedFileMixin, PloneNamedFile):
     size = read_alias('_size')
+    __external_mimeType__ = 'application/vnd.nextthought.namedfile'
 
 
 deprecated('NamedImage', 'DO NOT USE; Prefer NamedBlobImage')
 @interface.implementer(INamedImage)
 class NamedImage(NamedFileMixin, PloneNamedImage):
     size = read_alias('_size')
+    __external_mimeType__ = 'application/vnd.nextthought.namedimage'
 
 
 @interface.implementer(INamedBlobFile)
 class NamedBlobFile(NamedFileMixin, PloneNamedBlobFile):
+
+    __external_mimeType__ = 'application/vnd.nextthought.namedblobfile'
 
     @property
     def size(self):
@@ -123,6 +127,8 @@ class NamedBlobFile(NamedFileMixin, PloneNamedBlobFile):
 
 @interface.implementer(INamedBlobImage)
 class NamedBlobImage(NamedFileMixin, PloneNamedBlobImage):
+
+    __external_mimeType__ = 'application/vnd.nextthought.namedblobimage'
 
     @property
     def size(self):
