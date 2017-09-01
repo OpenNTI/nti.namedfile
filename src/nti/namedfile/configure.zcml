@@ -35,6 +35,11 @@
 			 provides="nti.externalization.interfaces.IMimeObjectFactory"
 			 name="application/vnd.nextthought.namedblobimage" />
 
+ 	<adapter factory=".datastructures.ZopeFileFactory"
+			 for="nti.base.interfaces.IDict"
+			 provides="nti.externalization.interfaces.IMimeObjectFactory"
+			 name="application/vnd.nextthought.zopefile" />
+
 	<adapter factory=".datastructures.NamedFileObjectIO"
 			 for=".interfaces.INamedFile"  />
 
@@ -46,5 +51,12 @@
 		
 	<adapter factory=".datastructures.NamedBlobImageObjectIO"
 			 for=".interfaces.INamedBlobImage"  />
+
+	<adapter factory=".datastructures.NamedBlobImageObjectIO"
+			 for="zope.file.interfaces.IFile" />
+
+	<adapter factory=".externalization._FileExporter"
+			 for="nti.base.interfaces.IFile"
+			 name="exporter" />
 
 </configure>

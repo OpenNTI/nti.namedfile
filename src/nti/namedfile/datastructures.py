@@ -12,11 +12,17 @@ logger = __import__('logging').getLogger(__name__)
 from zope import component
 from zope import interface
 
+from zope.file.file import File as ZopeFile
+
+from zope.file.interfaces import IFile as IZopeFile
+
 from zope.file.upload import nameFinder
 
 from nti.base._compat import text_
 from nti.base._compat import bytes_
 
+from nti.base.interfaces import DEFAULT_CONTENT_TYPE
+ 
 from nti.property.schema import DataURI
 
 from nti.externalization.datastructures import AbstractDynamicObjectIO
@@ -45,7 +51,8 @@ MIMETYPE = StandardExternalFields.MIMETYPE
 class NamedFileObjectIO(AbstractDynamicObjectIO):
 
     _excluded_out_ivars_ = {'data', 'size', 'contentType'}
-    _excluded_out_ivars_ = _excluded_out_ivars_.union(AbstractDynamicObjectIO._excluded_out_ivars_)
+    _excluded_out_ivars_ = _excluded_out_ivars_.union(
+        AbstractDynamicObjectIO._excluded_out_ivars_)
 
     def __init__(self, ext_self):
         super(NamedFileObjectIO, self).__init__()
@@ -88,7 +95,8 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
             self._ext_remove_excluded(parsed)
 
         # start update
-        updated = super(NamedFileObjectIO, self).updateFromExternalObject(parsed, *args, **kwargs)
+        updated = super(NamedFileObjectIO, self).updateFromExternalObject(
+            parsed, *args, **kwargs)
         ext_self = self._ext_replacement()
 
         url = parsed.get('url') or parsed.get('value')
@@ -126,11 +134,14 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
     def toExternalObject(self, *args, **kwargs):
         ext_dict = super(NamedFileObjectIO, self).toExternalObject(*args, **kwargs)
         the_file = self._ext_replacement()
-        contentType = the_file.contentType
-        ext_dict['name'] = the_file.name
-        ext_dict['filename'] = the_file.filename
+        name = getattr(the_file, 'name', None)
+        filename = getattr(the_file, 'filename', None)
+        ext_dict['filename'] = filename
+        ext_dict['name'] = name or filename
         ext_dict[MIMETYPE] = self._ext_mimeType(the_file)
-        ext_dict['contentType'] = ext_dict['FileMimeType'] = text_(contentType or '')
+        contentType = getattr(the_file, 'contentType', None)
+        contentType = contentType or DEFAULT_CONTENT_TYPE
+        ext_dict['contentType'] = ext_dict['FileMimeType'] = text_(contentType)
         return ext_dict
 
 
@@ -155,6 +166,13 @@ class NamedBlobImageObjectIO(NamedFileObjectIO):
         return 'application/vnd.nextthought.namedblobimage'
 
 
+@component.adapter(IZopeFile)
+class ZopeFileObjectIO(NamedFileObjectIO):
+
+    def _ext_mimeType(self, unused_obj):
+        return 'application/vnd.nextthought.zopefile'
+
+
 def getContentType(ext_obj):
     return ext_obj.get('FileMimeType') \
         or ext_obj.get('contentType')  \
@@ -177,20 +195,20 @@ def BaseFactory(ext_obj, file_factory, image_factory=None):
 
 
 def NamedFileFactory(ext_obj):
-    result = BaseFactory(ext_obj, NamedFile, NamedFile)
-    return result
+    return BaseFactory(ext_obj, NamedFile, NamedFile)
 
 
 def NamedImageFactory(ext_obj):
-    result = BaseFactory(ext_obj, NamedImage, NamedImage)
-    return result
+    return BaseFactory(ext_obj, NamedImage, NamedImage)
 
 
 def NamedBlobFileFactory(ext_obj):
-    result = BaseFactory(ext_obj, NamedBlobFile, NamedBlobImage)
-    return result
+    return BaseFactory(ext_obj, NamedBlobFile, NamedBlobImage)
 
 
 def NamedBlobImageFactory(ext_obj):
-    result = BaseFactory(ext_obj, NamedBlobImage, NamedBlobImage)
-    return result
+    return BaseFactory(ext_obj, NamedBlobImage, NamedBlobImage)
+
+
+def ZopeFileFactory(ext_obj):
+    return BaseFactory(ext_obj, ZopeFile, ZopeFile)
