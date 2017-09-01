@@ -14,7 +14,7 @@ from zope import interface
 
 from nti.base.interfaces import DEFAULT_CONTENT_TYPE
 
-from nti.base.interfaces import IFile
+from nti.base.interfaces import INamedFile
 
 from nti.externalization.interfaces import IInternalObjectExternalizer
 
@@ -23,7 +23,7 @@ from nti.externalization.externalization import to_external_object
 from nti.property.dataurl import encode
 
 
-@component.adapter(IFile)
+@component.adapter(INamedFile)
 @interface.implementer(IInternalObjectExternalizer)
 class _FileExporter(object):
 

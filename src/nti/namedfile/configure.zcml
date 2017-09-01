@@ -56,7 +56,7 @@
 			 for="zope.file.interfaces.IFile" />
 
 	<adapter factory=".externalization._FileExporter"
-			 for="nti.base.interfaces.IFile"
+			 for="nti.base.interfaces.INamedFile"
 			 name="exporter" />
 
 </configure>
