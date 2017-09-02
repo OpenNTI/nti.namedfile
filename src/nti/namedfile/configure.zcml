@@ -57,6 +57,7 @@
 
 	<adapter factory=".externalization._FileExporter"
 			 for="nti.base.interfaces.INamedFile"
+			 provides="nti.externalization.interfaces.IInternalObjectExternalizer"
 			 name="exporter" />
 
 </configure>
