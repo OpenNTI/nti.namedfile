@@ -18,6 +18,7 @@ from nti.base.interfaces import DEFAULT_CONTENT_TYPE
 
 from nti.base.interfaces import INamedFile
 
+from nti.externalization.interfaces import StandardExternalFields 
 from nti.externalization.interfaces import IInternalObjectExternalizer
 
 from nti.externalization.datastructures import InterfaceObjectIO
@@ -25,6 +26,9 @@ from nti.externalization.datastructures import InterfaceObjectIO
 from nti.mimetype.externalization import decorateMimeType
 
 from nti.property.dataurl import encode
+
+OID = StandardExternalFields.OID
+NTIID = StandardExternalFields.NTIID
 
 
 @component.adapter(INamedFile)
@@ -48,4 +52,5 @@ class _FileExporter(InterfaceObjectIO):
             result['contentType'] = text_(contentType)
             decorateMimeType(context, result)
         result['url'] = encode(context.data, contentType)
+        [result.pop(x, None) for x in (OID, NTIID)]
         return result
