@@ -29,8 +29,6 @@ from nti.externalization.datastructures import AbstractDynamicObjectIO
 
 from nti.externalization.interfaces import StandardExternalFields
 
-from nti.namedfile.file import NamedFile
-from nti.namedfile.file import NamedImage
 from nti.namedfile.file import NamedBlobFile
 from nti.namedfile.file import NamedBlobImage
 
@@ -95,8 +93,8 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
             self._ext_remove_excluded(parsed)
 
         # start update
-        updated = super(NamedFileObjectIO, self).updateFromExternalObject(
-            parsed, *args, **kwargs)
+        updated = super(NamedFileObjectIO, self).updateFromExternalObject(parsed, *args, 
+                                                                          **kwargs)
         ext_self = self._ext_replacement()
 
         url = parsed.get('url') or parsed.get('value')
@@ -195,11 +193,11 @@ def BaseFactory(ext_obj, file_factory, image_factory=None):
 
 
 def NamedFileFactory(ext_obj):
-    return BaseFactory(ext_obj, NamedFile, NamedFile)
+    return BaseFactory(ext_obj, NamedBlobFile, NamedBlobFile)
 
 
 def NamedImageFactory(ext_obj):
-    return BaseFactory(ext_obj, NamedImage, NamedImage)
+    return BaseFactory(ext_obj, NamedBlobImage, NamedBlobImage)
 
 
 def NamedBlobFileFactory(ext_obj):
