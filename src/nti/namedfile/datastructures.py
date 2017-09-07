@@ -91,12 +91,10 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
             ext_self.reference = parsed.get(OID) or parsed.get(NTIID)
             # then remove excluded in fields to avoid any hint of a copy
             self._ext_remove_excluded(parsed)
-
         # start update
         updated = super(NamedFileObjectIO, self).updateFromExternalObject(parsed, *args, 
                                                                           **kwargs)
         ext_self = self._ext_replacement()
-
         url = parsed.get('url') or parsed.get('value')
         name = parsed.get('name') or parsed.get('Name')
         if url:
@@ -104,10 +102,8 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
             ext_self.contentType = data_url.mimeType
             ext_self.data = data_url.data
             updated = True
-
         if name and not parsed.get('filename', None):
             parsed['filename'] = name
-
         if 'filename' in parsed:
             ext_self.filename = parsed['filename']
             # some times we get full paths
@@ -119,10 +115,9 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
         # display name
         if name and name != ext_self.filename:
             ext_self.name = name
-
         # contentType
         # XXX: We are IContentTypeAware constrained to have ASCII `mimeType`
-        for name in ('FileMimeType', 'contentType', 'content_type', 'type'):
+        for name in ('FileMimeType', 'contentType'):
             if name in parsed:
                 ext_self.contentType = bytes_(parsed[name])
                 updated = True
