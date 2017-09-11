@@ -37,6 +37,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
+    url="https://github.com/NextThought/nti.namedfile",
     zip_safe=True,
     packages=find_packages('src'),
     package_dir={'': 'src'},
