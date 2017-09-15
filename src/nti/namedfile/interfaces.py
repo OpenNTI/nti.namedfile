@@ -14,8 +14,6 @@ plonefile_zopefile_patch_on_import.patch()
 
 from zope import interface
 
-from zope.schema import BytesLine
-
 from plone.namedfile.interfaces import IFile as IPloneFile
 from plone.namedfile.interfaces import INamedFile as IPloneNamedFile
 from plone.namedfile.interfaces import INamedImage as IPloneNamedImage
@@ -28,10 +26,10 @@ from nti.base.interfaces import ILastModified
 from nti.mimetype.mimetype import rfc2047MimeTypeConstraint
 
 from nti.schema.field import Int
-from nti.schema.field import Variant
 from nti.schema.field import ValidTextLine
 from nti.schema.field import IndexedIterable
 from nti.schema.field import ValidText as Text
+from nti.schema.field import DecodingValidTextLine
 
 
 class IFileConstraints(interface.Interface):
@@ -89,10 +87,10 @@ class IFile(IPloneFile, ILastModified):
                          required=False,
                          default=None)
     
-    contentType = Variant((ValidTextLine(), BytesLine()),
-                          title=u'Content type', required=False,
-                          default='',
-                          missing_value='')
+    contentType = DecodingValidTextLine(title=u'Content type', 
+                                        required=False,
+                                        default='',
+                                        missing_value='')
 
 
 class INamedFile(IFile, IPloneNamedFile):
