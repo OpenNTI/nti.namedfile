@@ -16,6 +16,7 @@ recursive-include docs *.rst
 recursive-include docs Makefile
 recursive-include src *.zcml
 recursive-include src *.bmp
+recursive-include src *.gif
 recursive-include src *.jpg
 recursive-include src *.png
 recursive-include src *.tiff
