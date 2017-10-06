@@ -6,17 +6,14 @@ https://github.com/plone/plone.namedfile/blob/master/plone/namedfile/utils/jpeg_
 .. $Id$
 """
 
-from __future__ import print_function, absolute_import, division
-__docformat__ = "restructuredtext en"
-
-logger = __import__('logging').getLogger(__name__)
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
 import struct
+from six.moves import cStringIO
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from six import StringIO
+logger = __import__('logging').getLogger(__name__)
 
 
 def process_jpeg(data):
@@ -25,7 +22,7 @@ def process_jpeg(data):
     # handle JPEGs
     if size >= 2 and data.startswith(b'\377\330'):
         content_type = 'image/jpeg'
-        jpeg = StringIO(data)
+        jpeg = cStringIO(data)
         jpeg.read(2)
         b = jpeg.read(1)
         try:

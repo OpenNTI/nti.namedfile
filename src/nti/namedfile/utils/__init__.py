@@ -6,17 +6,12 @@ https://github.com/plone/plone.namedfile/blob/master/plone/namedfile/utils/__ini
 .. $Id$
 """
 
-from __future__ import print_function, absolute_import, division
-__docformat__ = "restructuredtext en"
-
-logger = __import__('logging').getLogger(__name__)
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
 import struct
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from six import StringIO
+from six.moves import cStringIO
 
 from nti.base._compat import native_
 
@@ -25,6 +20,8 @@ from nti.namedfile.utils.jpeg_utils import process_jpeg
 from nti.namedfile.utils.png_utils import process_png
 
 from nti.namedfile.utils.tiff_utils import process_tiff
+
+logger = __import__('logging').getLogger(__name__)
 
 
 def _ensure_data(image):
@@ -66,7 +63,7 @@ def getImageInfo(data):
     elif data:
         try:
             from PIL import Image
-            img = Image.open(StringIO(data))
+            img = Image.open(cStringIO(data))
             width, height = img.size
             content_type = img.format or ''
             if content_type.lower() == 'tiff':

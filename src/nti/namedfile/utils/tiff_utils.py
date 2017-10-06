@@ -4,17 +4,14 @@
 .. $Id$
 """
 
-from __future__ import print_function, absolute_import, division
-__docformat__ = "restructuredtext en"
-
-logger = __import__('logging').getLogger(__name__)
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
 import struct
+from six.moves import cStringIO
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from six import StringIO
+logger = __import__('logging').getLogger(__name__)
 
 
 def process_tiff(data):
@@ -41,7 +38,7 @@ def process_tiff(data):
         11: (4, bo_char + "f"),  # FLOAT
         12: (8, bo_char + "d")   # DOUBLE
     }
-    tiff = StringIO(data)
+    tiff = cStringIO(data)
     ifd_offset = struct.unpack(bo_char + "L", data[4:8])[0]
     try:
         count_size = 2
