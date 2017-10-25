@@ -4,10 +4,9 @@
 .. $Id$
 """
 
-from __future__ import print_function, absolute_import, division
-__docformat__ = "restructuredtext en"
-
-logger = __import__('logging').getLogger(__name__)
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
 import os
 
@@ -20,6 +19,8 @@ from nti.mimetype.mimetype import rfc2047MimeTypeConstraint
 
 from nti.namedfile.interfaces import INamedFile
 from nti.namedfile.interfaces import IFileConstraints
+
+logger = __import__('logging').getLogger(__name__)
 
 
 @component.adapter(INamedFile)
@@ -44,7 +45,7 @@ class FileConstraints(object):
         if self._v_file is not None and size is None:
             size = self._v_file.getSize()
         result = not self.max_file_size \
-              or (size is not None and size <= self.max_file_size)
+            or (size is not None and size <= self.max_file_size)
         return result
 
     def is_mime_type_allowed(self, mime_type=None):

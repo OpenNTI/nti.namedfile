@@ -4,10 +4,9 @@
 .. $Id$
 """
 
-from __future__ import print_function, absolute_import, division
-__docformat__ = "restructuredtext en"
-
-logger = __import__('logging').getLogger(__name__)
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
 from nti.namedfile import monkey as plonefile_zopefile_patch_on_import
 plonefile_zopefile_patch_on_import.patch()
@@ -86,8 +85,8 @@ class IFile(IPloneFile, ILastModified):
     name = ValidTextLine(title=u"Identifier for the file",
                          required=False,
                          default=None)
-    
-    contentType = DecodingValidTextLine(title=u'Content type', 
+
+    contentType = DecodingValidTextLine(title=u'Content type',
                                         required=False,
                                         default='',
                                         missing_value='')

@@ -8,6 +8,7 @@ entry_points = {
 
 
 TESTS_REQUIRE = [
+    'fudge',
     'nti.testing',
     'zope.dottedname',
     'zope.testrunner',
@@ -29,12 +30,16 @@ setup(
     license='Apache',
     keywords='NTI named file support',
     classifiers=[
+        'Framework :: Zope3',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
     ],
     url="https://github.com/NextThought/nti.namedfile",
     zip_safe=True,

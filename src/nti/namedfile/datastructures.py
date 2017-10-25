@@ -4,10 +4,9 @@
 .. $Id$
 """
 
-from __future__ import print_function, absolute_import, division
-__docformat__ = "restructuredtext en"
-
-logger = __import__('logging').getLogger(__name__)
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
 from zope import component
 from zope import interface
@@ -22,7 +21,7 @@ from nti.base._compat import text_
 from nti.base._compat import bytes_
 
 from nti.base.interfaces import DEFAULT_CONTENT_TYPE
- 
+
 from nti.property.schema import DataURI
 
 from nti.externalization.datastructures import AbstractDynamicObjectIO
@@ -43,6 +42,8 @@ from nti.property.dataurl import DataURL
 OID = StandardExternalFields.OID
 NTIID = StandardExternalFields.NTIID
 MIMETYPE = StandardExternalFields.MIMETYPE
+
+logger = __import__('logging').getLogger(__name__)
 
 
 @component.adapter(INamedFile)
@@ -92,8 +93,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
             # then remove excluded in fields to avoid any hint of a copy
             self._ext_remove_excluded(parsed)
         # start update
-        updated = super(NamedFileObjectIO, self).updateFromExternalObject(parsed, *args, 
-                                                                          **kwargs)
+        updated = super(NamedFileObjectIO, self).updateFromExternalObject(parsed, *args, **kwargs)
         ext_self = self._ext_replacement()
         url = parsed.get('url') or parsed.get('value')
         name = parsed.get('name') or parsed.get('Name')

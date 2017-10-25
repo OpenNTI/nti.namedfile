@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, absolute_import, division
-__docformat__ = "restructuredtext en"
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
 # disable: accessing protected members, too many methods
 # pylint: disable=W0212,R0904
@@ -28,7 +29,7 @@ from nti.base.interfaces import INamedFile
 
 from nti.namedfile.monkey import patch
 patch()
-        
+
 from nti.namedfile.tests import SharedConfiguringTestLayer
 
 
@@ -52,14 +53,14 @@ class TestMonkey(unittest.TestCase):
             assert_that(f, validly_provides(INamedFile))
             assert_that(f, validly_provides(IPloneFile))
             assert_that(f, has_property('__name__', 'foo.txt'))
-        
+
     def test_zope_file_patch(self):
         zf = File(mimeType='text/plain')
         zf.filename = 'data.txt'
 
         assert_that(zf, validly_provides(INamedFile))
         assert_that(zf, verifiably_provides(INamedFile))
-        
+
         assert_that(zf, has_property('name', is_('data.txt')))
         assert_that(zf, has_property('filename', is_('data.txt')))
         assert_that(zf, has_property('contentType', is_('text/plain')))
@@ -67,7 +68,7 @@ class TestMonkey(unittest.TestCase):
         zf.data = b'data'
         assert_that(zf.getSize(), is_(4))
         assert_that(zf.data, is_(b'data'))
-        
+
         zf.name = 'data'
         assert_that(zf, has_property('name', is_('data')))
         assert_that(zf, has_property('filename', is_('data.txt')))
