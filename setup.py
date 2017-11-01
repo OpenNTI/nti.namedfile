@@ -55,6 +55,7 @@ setup(
         'nti.mimetype',
         'nti.property',
         'nti.schema',
+        'piexif',
         'plone.namedfile==3.0.9',
         'six',
         'zope.annotation',
