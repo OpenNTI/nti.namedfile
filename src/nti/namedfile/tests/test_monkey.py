@@ -39,19 +39,19 @@ class TestMonkey(unittest.TestCase):
 
     def test_plone_file_patch(self):
         nf = NamedFile(data=b'data',
-                       contentType='text/plain',
+                       contentType=b'text/plain',
                        filename=u'foo.txt')
 
         nbf = NamedBlobFile(data=b'data',
-                            contentType='text/plain',
+                            contentType=b'text/plain',
                             filename=u'foo.txt')
 
         nif = NamedImage(data=b'data',
-                         contentType='image/gif',
+                         contentType=b'image/gif',
                          filename=u'foo.txt')
         for f in nf, nbf, nif:
             assert_that(f, validly_provides(INamedFile))
-            assert_that(f, validly_provides(IPloneFile))
+            assert_that(f, verifiably_provides(IPloneFile))
             assert_that(f, has_property('__name__', 'foo.txt'))
 
     def test_zope_file_patch(self):

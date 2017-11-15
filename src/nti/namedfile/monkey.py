@@ -10,6 +10,7 @@ from __future__ import absolute_import
 
 import mimetypes
 from io import BytesIO
+from six import get_function_globals
 
 from zope import component
 
@@ -25,8 +26,6 @@ from zope.interface import interfaces
 
 from zope.mimetype.interfaces import IMimeTypeGetter
 
-from plone.namedfile import file as plone_file
-
 from plone.namedfile.file import NamedFile
 from plone.namedfile.file import NamedBlobFile
 
@@ -36,8 +35,6 @@ from plone.namedfile.utils import get_contenttype
 
 from nti.base.interfaces import INamedFile
 from nti.base.interfaces import DEFAULT_CONTENT_TYPE as OCTET_STREAM
-
-from nti.namedfile.utils import getImageInfo
 
 from nti.property.property import alias
 
@@ -145,14 +142,11 @@ def _patch():
     IZFile.__bases__ += (INamedFile,)
     
     # patch plone get_contenttype
-    func_globals = getattr(get_contenttype, 'func_globals')
+    func_globals = get_function_globals(get_contenttype)
     func_globals['component'] = component
     func_globals['nameFinder'] = nameFinder
     func_globals['IMimeTypeGetter'] = IMimeTypeGetter
     get_contenttype.__code__ = _patched_get_contenttype.__code__
-
-    # use new code to get image info
-    plone_file.getImageInfo = getImageInfo
 
 
 def patch():

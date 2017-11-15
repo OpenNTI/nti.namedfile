@@ -29,12 +29,13 @@ from nti.base.interfaces import INamedFile
 from nti.externalization.internalization import find_factory_for
 from nti.externalization.internalization import update_from_external_object
 
+from nti.externalization.tests import externalizes
+
 from nti.namedfile.file import NamedFile
 from nti.namedfile.file import NamedBlobFile
 
-from nti.externalization.tests import externalizes
-
 from nti.namedfile.tests import SharedConfiguringTestLayer
+
 
 GIF_DATAURL = 'data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw=='
 
@@ -70,13 +71,13 @@ class TestNamedFile(unittest.TestCase):
                                                   has_key('name'))))
 
     def test_nameblob(self):
-        s = NamedBlobFile(GIF_DATAURL, 'image/gif', u'image.gif')
-        assert_that(s, has_property('size', is_(106)))
-        assert_that(s, has_property('data', is_(GIF_DATAURL)))
+        s = NamedBlobFile(b'image', 'image/gif', u'image.gif')
+        assert_that(s, has_property('size', is_(5)))
+        assert_that(s, has_property('data', is_(b'image')))
         assert_that(s, has_property('filename', is_('image.gif')))
         assert_that(s, has_property('contentType', is_('image/gif')))
         s.size = 888
-        assert_that(s, has_property('size', is_(106)))
+        assert_that(s, has_property('size', is_(5)))
 
     def test_interface(self):
         for factory in (NamedBlobFile,

@@ -10,6 +10,7 @@ entry_points = {
 TESTS_REQUIRE = [
     'fudge',
     'nti.testing',
+    'zope.formlib',
     'zope.dottedname',
     'zope.testrunner',
 ]
