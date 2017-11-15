@@ -52,6 +52,17 @@ class TestNamedFile(unittest.TestCase):
         named = NamedBlobFile(data=b'data',
                               contentType=u'image/gif',
                               filename=u'zpt.gif')
+
+        internal = FileConstraints()
+        assert_that(internal.is_mime_type_allowed(), is_(False))
+        assert_that(internal.is_mime_type_allowed('*/*'), is_(False))
+        
+        internal.allowed_mime_types = ('image/*;',)
+        assert_that(internal.is_mime_type_allowed('image/gif'), is_(True))
+        
+        internal.allowed_mime_types = ('*/*',)
+        assert_that(internal.is_mime_type_allowed('image/gif'), is_(True))
+
         internal = FileConstraints(named)
         internal.allowed_extensions = (u'.GIF',)
         internal.allowed_mime_types = (u'image/gif',)
