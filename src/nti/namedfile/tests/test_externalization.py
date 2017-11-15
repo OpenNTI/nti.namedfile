@@ -26,8 +26,6 @@ from nti.namedfile.externalization import _FileExporter
 
 from nti.namedfile.tests import SharedConfiguringTestLayer
 
-GIF_DATAURL = 'data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw=='
-
 
 class TestExternalization(unittest.TestCase):
 
@@ -36,23 +34,23 @@ class TestExternalization(unittest.TestCase):
     def test_exporter(self):
         ext_obj = {
             'MimeType': 'application/vnd.nextthought.namedblobfile',
-            'value': GIF_DATAURL,
-            'filename': u'ichigo.gif',
+            'filename': u'ichigo.txt',
             'name': u'ichigo',
-            'contentType': 'image/gif'
+            'contentType': 'text/plain',
         }
 
         factory = find_factory_for(ext_obj)
         internal = factory()
         update_from_external_object(internal, ext_obj, require_updater=True)
 
+        internal.data = b'ichigo'
         ext_obj = to_external_object(internal, name='exporter')
         assert_that(ext_obj,
-                    has_entries('contentType', 'image/gif',
+                    has_entries('contentType', 'text/plain',
                                 'name', 'ichigo',
-                                'filename', 'ichigo.gif',
-                                'url', GIF_DATAURL,
-                                'MimeType', 'application/vnd.nextthought.namedblobimage'))
+                                'filename', 'ichigo.txt',
+                                'url', 'data:text/plain;charset=US-ASCII;base64,aWNoaWdv',
+                                'MimeType', 'application/vnd.nextthought.namedblobfile'))
 
     def test_coverage(self):
         @interface.implementer(INamedFile)

@@ -57,7 +57,7 @@ def safe_filename(s):
             s = s.encode("ascii", 'xmlcharrefreplace')
         except Exception: # pragma: no cover
             pass
-        s = re.sub(r'[/<>:;"\\|#?*\s]+', '_', s)
+        s = re.sub(r'[/<>:;"\\|#?*\s]+', '_', text_(s))
         s = re.sub(r'&', '_', s)
         try:
             s = text_(s)

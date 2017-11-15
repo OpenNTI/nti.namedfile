@@ -52,6 +52,6 @@ class _FileExporter(InterfaceObjectIO):
             result = super(_FileExporter, self).toExternalObject(decorate=False, **kwargs)
             result['contentType'] = text_(contentType)
             decorateMimeType(context, result)
-        result['url'] = encode(context.data, contentType)
+        result['url'] = encode(context.data, text_(contentType))
         [result.pop(x, None) for x in (OID, NTIID)]
         return result
