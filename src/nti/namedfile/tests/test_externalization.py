@@ -38,7 +38,8 @@ class TestExternalization(unittest.TestCase):
             'MimeType': 'application/vnd.nextthought.namedblobfile',
             'value': GIF_DATAURL,
             'filename': u'ichigo.gif',
-            'name': u'ichigo.gif'
+            'name': u'ichigo',
+            'contentType': 'image/gif'
         }
 
         factory = find_factory_for(ext_obj)
@@ -48,7 +49,8 @@ class TestExternalization(unittest.TestCase):
         ext_obj = to_external_object(internal, name='exporter')
         assert_that(ext_obj,
                     has_entries('contentType', 'image/gif',
-                                'name', 'ichigo.gif',
+                                'name', 'ichigo',
+                                'filename', 'ichigo.gif',
                                 'url', GIF_DATAURL,
                                 'MimeType', 'application/vnd.nextthought.namedblobimage'))
 

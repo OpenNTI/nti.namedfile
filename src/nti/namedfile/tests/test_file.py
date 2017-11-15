@@ -54,8 +54,8 @@ class TestNamedFile(unittest.TestCase):
         ext_obj = {
             'MimeType': 'application/vnd.nextthought.namedblobfile',
             'value': GIF_DATAURL,
-            'filename': u'file.gif',
-            'name': u'ichigo'
+            'name': u'file.gif',
+            'OID': 'tag:nextthought.com,2011-10:aizen-OID-0x01:666f6f'
         }
 
         factory = find_factory_for(ext_obj)
@@ -70,7 +70,7 @@ class TestNamedFile(unittest.TestCase):
 
         assert_that(internal, has_property('contentType', 'image/gif'))
         assert_that(internal, has_property('filename', 'file.gif'))
-        assert_that(internal, has_property('name', 'ichigo'))
+        assert_that(internal, has_property('name', 'file.gif'))
 
         assert_that(internal, externalizes(all_of(has_key('FileMimeType'),
                                                   has_key('filename'),
@@ -87,7 +87,7 @@ class TestNamedFile(unittest.TestCase):
         assert_that(s, has_property('contentType', is_('image/gif')))
         s.size = 888
         assert_that(s, has_property('size', is_(5)))
-    
+
     def test_namedblobimage(self):
         s = NamedBlobImage(b'image', 'image/gif', u'image.gif', u'image.gif')
         assert_that(s, has_property('size', is_(5)))

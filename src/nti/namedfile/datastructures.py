@@ -50,8 +50,7 @@ logger = __import__('logging').getLogger(__name__)
 class NamedFileObjectIO(AbstractDynamicObjectIO):
 
     _excluded_out_ivars_ = {'data', 'size', 'contentType'}
-    _excluded_out_ivars_ = _excluded_out_ivars_.union(
-        AbstractDynamicObjectIO._excluded_out_ivars_)
+    _excluded_out_ivars_ = _excluded_out_ivars_.union(AbstractDynamicObjectIO._excluded_out_ivars_)
 
     def __init__(self, ext_self):
         super(NamedFileObjectIO, self).__init__()
@@ -63,8 +62,8 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
     def _ext_all_possible_keys(self):
         return ()
 
-    def _ext_mimeType(self, unused_obj):
-        return 'application/vnd.nextthought.namedfile'
+    def _ext_mimeType(self, unused_obj=None):
+        return None
 
     def is_internal_fileref(self, parsed):
         return parsed.get(OID) or parsed.get(NTIID)
@@ -141,28 +140,28 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 @component.adapter(INamedImage)
 class NamedImageObjectIO(NamedFileObjectIO):
 
-    def _ext_mimeType(self, unused_obj):
+    def _ext_mimeType(self, unused_obj=None):
         return 'application/vnd.nextthought.namedimage'
 
 
 @component.adapter(INamedBlobFile)
 class NamedBlobFileObjectIO(NamedFileObjectIO):
 
-    def _ext_mimeType(self, unused_obj):
+    def _ext_mimeType(self, unused_obj=None):
         return 'application/vnd.nextthought.namedblobfile'
 
 
 @component.adapter(INamedBlobImage)
 class NamedBlobImageObjectIO(NamedFileObjectIO):
 
-    def _ext_mimeType(self, unused_obj):
+    def _ext_mimeType(self, unused_obj=None):
         return 'application/vnd.nextthought.namedblobimage'
 
 
 @component.adapter(IZopeFile)
 class ZopeFileObjectIO(NamedFileObjectIO):
 
-    def _ext_mimeType(self, unused_obj):
+    def _ext_mimeType(self, unused_obj=None):
         return 'application/vnd.nextthought.zopefile'
 
 
