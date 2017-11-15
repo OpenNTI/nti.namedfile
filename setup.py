@@ -62,6 +62,7 @@ setup(
         'zope.annotation',
         'zope.component',
         'zope.container',
+        'zope.deprecation',
         'zope.deferredimport',
         'zope.file',
         'zope.interface',
