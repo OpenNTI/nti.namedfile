@@ -23,7 +23,13 @@ from plone.namedfile.file import NamedBlobFile
 
 from plone.namedfile.interfaces import IFile as IPloneFile
 
+from plone.namedfile.utils import get_contenttype
+
+from zope import component
+
 from zope.file.file import File
+
+from zope.mimetype.interfaces import IMimeTypeGetter
 
 from nti.base.interfaces import INamedFile
 
@@ -53,6 +59,9 @@ class TestMonkey(unittest.TestCase):
             assert_that(f, validly_provides(INamedFile))
             assert_that(f, verifiably_provides(IPloneFile))
             assert_that(f, has_property('__name__', 'foo.txt'))
+            
+        assert_that(nf.openDetached().read(),
+                    is_(b'data'))
 
     def test_zope_file_patch(self):
         zf = File(mimeType='text/plain')
@@ -72,3 +81,27 @@ class TestMonkey(unittest.TestCase):
         zf.name = 'data'
         assert_that(zf, has_property('name', is_('data')))
         assert_that(zf, has_property('filename', is_('data.txt')))
+
+    def test_get_contenttype(self):
+        class Ichigo(object):
+            contentType = 'text/plain'
+            filename = 'ichigo.txt'
+        ichigo = Ichigo()
+        assert_that(get_contenttype(ichigo), is_('text/plain'))
+
+        ichigo.contentType = None
+        assert_that(get_contenttype(ichigo), is_('text/plain'))
+
+        class MimeTypeGetter(object):
+
+            def __call__(self, *unused_args, **unused_kwargs):
+                return 'text/plain'
+
+        mimetype_getter = MimeTypeGetter()
+        component.getGlobalSiteManager().registerUtility(mimetype_getter,
+                                                         IMimeTypeGetter)
+
+        assert_that(get_contenttype(ichigo), is_('text/plain'))
+
+        component.getGlobalSiteManager().unregisterUtility(mimetype_getter,
+                                                           IMimeTypeGetter)

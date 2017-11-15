@@ -44,19 +44,18 @@ logger = __import__('logging').getLogger(__name__)
 # plone's guessing of content types is very limited compared to what zope does;
 # let's use that instead. But many places have already imported it
 # statically by name, so swizzle out the code
-def _patched_get_contenttype(file=None, filename=None, default=OCTET_STREAM):
-    file_type = getattr(file, 'contentType', None)
+def _patched_get_contenttype(source=None, filename=None, default=OCTET_STREAM):
+    file_type = getattr(source, 'contentType', None)
     if file_type:
         return file_type
-    filename = getattr(file, 'filename', filename)
-
+    filename = getattr(source, 'filename', filename)
     mimeTypeGetter = component.queryUtility(IMimeTypeGetter)
     if mimeTypeGetter is not None:
-        mimeType = mimeTypeGetter(data=getattr(file, 'data', None),
+        mimeType = mimeTypeGetter(data=getattr(source, 'data', None),
                                   content_type=None,
                                   name=nameFinder(filename))
     else:
-        name = nameFinder(filename) if filename else None
+        name = nameFinder(source) if not filename else filename
         mimeType = mimetypes.guess_type(name)[0] if name else None
     return mimeType or default
 
@@ -66,7 +65,7 @@ def _patch():
     # declares the streaming interfaces open and openDetached while
     # plone's only declares the buffered 'data' interface, though
     # the blob-versions implement open and openDetached
-    if INFile.__iro__ != (INFile, interfaces.Interface,):
+    if INFile.__iro__ != (INFile, interfaces.Interface,):  # pragma: no cover
         raise ImportError("Internals of plone.namedfile have changed")
     INFile.__bases__ = (IZFile,)
 
@@ -112,7 +111,7 @@ def _patch():
         return nameFinder(self)
     NamedFile.name = readproperty(_name)
     NamedBlobFile.name = readproperty(_name)
-     
+
     # plone's non-blob-based files don't have open/openDetached,
     # so we fake it
     def _open(self, *unused_args, **unused_kwargs):
@@ -127,20 +126,23 @@ def _patch():
     # also have a display name
     ZFile.name = readproperty(_name)
     # set the data
+
     def _get_data(self):
         with self.open() as fp:
             return fp.read()
+
     def _set_data(self, data=b''):
         with self.open('w') as fp:
             return fp.write(data)
     ZFile.data = property(_get_data, _set_data)
     # return its size
+
     def _get_size(self):
         return self.size
     ZFile.getSize = _get_size
     # and make it and base file
     IZFile.__bases__ += (INamedFile,)
-    
+
     # patch plone get_contenttype
     func_globals = get_function_globals(get_contenttype)
     func_globals['component'] = component
@@ -151,6 +153,7 @@ def _patch():
 
 def patch():
     pass
+
 
 _patch()
 del _patch
