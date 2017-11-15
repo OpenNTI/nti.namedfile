@@ -77,6 +77,7 @@ setup(
             'Sphinx',
             'repoze.sphinx.autointerface',
             'sphinx_rtd_theme',
+            'zope.formlib',
         ],
     },
     entry_points=entry_points,
