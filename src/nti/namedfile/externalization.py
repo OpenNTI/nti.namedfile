@@ -17,7 +17,7 @@ from nti.base.interfaces import DEFAULT_CONTENT_TYPE
 
 from nti.base.interfaces import INamedFile
 
-from nti.externalization.interfaces import StandardExternalFields 
+from nti.externalization.interfaces import StandardExternalFields
 from nti.externalization.interfaces import IInternalObjectExternalizer
 
 from nti.externalization.datastructures import InterfaceObjectIO
