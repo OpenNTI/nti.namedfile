@@ -55,13 +55,13 @@ def safe_filename(s):
     if s:
         try:
             s = s.encode("ascii", 'xmlcharrefreplace')
-        except Exception:
+        except Exception: # pragma: no cover
             pass
         s = re.sub(r'[/<>:;"\\|#?*\s]+', '_', s)
         s = re.sub(r'&', '_', s)
         try:
             s = text_(s)
-        except UnicodeDecodeError:
+        except UnicodeDecodeError: # pragma: no cover
             s = s.decode('utf-8')
     return s
 

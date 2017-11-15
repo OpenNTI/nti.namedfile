@@ -21,6 +21,8 @@ from nti.testing.matchers import validly_provides
 
 import unittest
 
+from zope import interface
+
 from plone.namedfile.file import NamedFile as PloneNamedFile
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 
@@ -33,6 +35,10 @@ from nti.externalization.tests import externalizes
 
 from nti.namedfile.file import NamedFile
 from nti.namedfile.file import NamedBlobFile
+from nti.namedfile.file import NamedBlobImage
+
+from nti.namedfile.file import safe_filename
+from nti.namedfile.file import get_context_name
 
 from nti.namedfile.tests import SharedConfiguringTestLayer
 
@@ -70,12 +76,21 @@ class TestNamedFile(unittest.TestCase):
                                                   has_key('filename'),
                                                   has_key('name'))))
 
-    def test_nameblob(self):
-        s = NamedBlobFile(b'image', 'image/gif', u'image.gif')
+    def test_namedblob(self):
+        s = NamedBlobFile(b'image', 'image/gif', u'image.gif', u'image.gif')
+        str(s)  # coverage
         assert_that(s, has_property('size', is_(5)))
+        assert_that(s, has_property('length', is_(5)))
         assert_that(s, has_property('data', is_(b'image')))
         assert_that(s, has_property('filename', is_('image.gif')))
+        assert_that(s, has_property('__name__', is_('image.gif')))
         assert_that(s, has_property('contentType', is_('image/gif')))
+        s.size = 888
+        assert_that(s, has_property('size', is_(5)))
+    
+    def test_namedblobimage(self):
+        s = NamedBlobImage(b'image', 'image/gif', u'image.gif', u'image.gif')
+        assert_that(s, has_property('size', is_(5)))
         s.size = 888
         assert_that(s, has_property('size', is_(5)))
 
@@ -86,3 +101,15 @@ class TestNamedFile(unittest.TestCase):
                         PloneNamedBlobFile):
             s = factory()
             assert_that(s, validly_provides(INamedFile))
+
+    def test_get_context_name(self):
+        @interface.implementer(INamedFile)
+        class Bleach(object):
+            name = None
+            filename = 'ichigo.txt'
+        assert_that(get_context_name(Bleach()),
+                    is_('ichigo.txt'))
+
+    def test_safe_filename(self):
+        assert_that(safe_filename('/ichigo&.txt'),
+                    is_('_ichigo_.txt'))
