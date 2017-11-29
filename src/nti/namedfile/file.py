@@ -8,6 +8,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
+# pylint: disable=E0202,W0703
+
 import re
 
 from zope import interface
@@ -51,17 +53,16 @@ get_file_name = get_context_name
 
 
 def safe_filename(s):
-    __traceback_info__ = s
     if s:
         try:
             s = s.encode("ascii", 'xmlcharrefreplace')
-        except Exception: # pragma: no cover
+        except Exception:  # pragma: no cover
             pass
         s = re.sub(r'[/<>:;"\\|#?*\s]+', '_', text_(s))
         s = re.sub(r'&', '_', s)
         try:
             s = text_(s)
-        except UnicodeDecodeError: # pragma: no cover
+        except UnicodeDecodeError:  # pragma: no cover
             s = s.decode('utf-8')
     return s
 
@@ -73,7 +74,8 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
     content_type = alias('contentType')
 
     def __init__(self, data='', contentType='', filename=None, name=None):
-        super(NamedFileMixin, self).__init__(data, contentType, filename or name)
+        super(NamedFileMixin, self).__init__(
+            data, contentType, filename or name)
         if name:
             self.name = name
 
@@ -85,7 +87,7 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
     def name(self):
         return nameFinder(self)
 
-    # XXX: Sadly we have defined the property __name__ as a
+    # Sadly we have defined the property __name__ as a
     # readproperty on the name property instead of filename
     # so whenever __name__ is set it creates an additional entry on
     # this object __dict__, which we did not want.

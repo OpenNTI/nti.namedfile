@@ -75,7 +75,7 @@ class IFileConstrained(IConstrained):
     Marker interface for objects that have associated :class:`.IFileConstraints`
     """
 
-# XXX: For legacy purposes do not make IFile to be an ICreated object to avoid
+# For legacy purposes do not make IFile to be an ICreated object to avoid
 # denying access due to default acl providers on ICreated objects. We need a
 # default ACL provider for IFile objects
 

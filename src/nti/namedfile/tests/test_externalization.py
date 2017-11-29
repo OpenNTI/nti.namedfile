@@ -8,8 +8,11 @@ from __future__ import absolute_import
 # disable: accessing protected members, too many methods
 # pylint: disable=W0212,R0904
 
+from hamcrest import is_not
+from hamcrest import has_key
 from hamcrest import assert_that
 from hamcrest import has_entries
+does_not = is_not
 
 import unittest
 
@@ -59,6 +62,10 @@ class TestExternalization(unittest.TestCase):
             filename = 'ichigo.txt'
 
         exporter = _FileExporter(Bleach(), INamedFile)
-        assert_that(exporter.toExternalObject(),
+        ext_obj = exporter.toExternalObject()
+        assert_that(ext_obj,
                     has_entries('filename', 'ichigo.txt',
                                 'url', 'data:application/octet-stream;base64,aWNoaWdv'))
+        assert_that(ext_obj, 
+                    does_not(has_key('NTIID')))
+

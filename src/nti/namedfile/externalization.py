@@ -8,6 +8,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
+# pylint: disable=E1121
+
 from zope import component
 from zope import interface
 
@@ -41,10 +43,13 @@ class _FileExporter(InterfaceObjectIO):
 
     _ext_iface_upper_bound = INamedFile
 
-    def toExternalObject(self, **kwargs):
+    def _remove(self, m, *args):
+        return [m.pop(x, None) for x in args]
+
+    def toExternalObject(self, unused_mergeFrom=None, **kwargs):
         context = self._ext_replacement()
         contentType = getattr(context, 'contentType', None) or DEFAULT_CONTENT_TYPE
-        [kwargs.pop(x, None) for x in ('name', 'decorate')]
+        self._remove(kwargs, 'name', 'decorate')
         adapter = IInternalObjectExternalizer(context, None)
         if adapter is not None:
             result = adapter.toExternalObject(decorate=False, **kwargs)
@@ -53,5 +58,5 @@ class _FileExporter(InterfaceObjectIO):
             result['contentType'] = text_(contentType)
             decorateMimeType(context, result)
         result['url'] = encode(context.data, text_(contentType))
-        [result.pop(x, None) for x in (OID, NTIID)]
+        self._remove(result, OID, NTIID)
         return result
