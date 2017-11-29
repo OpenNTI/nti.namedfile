@@ -8,6 +8,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
+# pylint: disable=W0201
+
 from zope import component
 from zope import interface
 
@@ -68,6 +70,9 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
     def is_internal_fileref(self, parsed):
         return parsed.get(OID) or parsed.get(NTIID)
 
+    _ext_setattr = staticmethod(setattr)
+    _ext_getattr = staticmethod(getattr)
+    
     # For symmetry with the other response types,
     # we accept either 'url' or 'value'
 
@@ -115,7 +120,6 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
         if name and name != ext_self.filename:
             ext_self.name = name
         # contentType
-        # XXX: We are IContentTypeAware constrained to have ASCII `mimeType`
         for name in ('FileMimeType', 'contentType'):
             if name in parsed:
                 ext_self.contentType = bytes_(parsed[name])
@@ -123,8 +127,8 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
                 break
         return updated
 
-    def toExternalObject(self, *args, **kwargs):
-        ext_dict = super(NamedFileObjectIO, self).toExternalObject(*args, **kwargs)
+    def toExternalObject(self, mergeFrom=None, *args, **kwargs):
+        ext_dict = super(NamedFileObjectIO, self).toExternalObject(mergeFrom, *args, **kwargs)
         the_file = self._ext_replacement()
         name = getattr(the_file, 'name', None)
         filename = getattr(the_file, 'filename', None)
