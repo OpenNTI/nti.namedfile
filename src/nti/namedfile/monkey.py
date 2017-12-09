@@ -83,7 +83,7 @@ def _patch():
     # the type name; only instances can see what's in the type's
     # __dict__ (and we can't assign to it). So we resort to sticking
     # in a base class.
-    # TODO: Rethink that, it's probably not right. __name__ is the
+    # Rethink that, it's probably not right. __name__ is the
     # name within the container; it may initially be based on
     # the filename, but they are probably different
     class _Base(object):

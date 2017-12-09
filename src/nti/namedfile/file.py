@@ -8,8 +8,6 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-# pylint: disable=E0202,W0703
-
 import re
 
 from zope import interface
@@ -54,6 +52,7 @@ get_file_name = get_context_name
 
 def safe_filename(s):
     if s:
+        # pylint: disable=broad-except
         try:
             s = s.encode("ascii", 'xmlcharrefreplace')
         except Exception:  # pragma: no cover
@@ -84,7 +83,7 @@ class NamedFileMixin(CreatedAndModifiedTimeMixin):
         return self.getSize()
 
     @readproperty
-    def name(self):
+    def name(self):  # pylint: disable=method-hidden
         return nameFinder(self)
 
     # Sadly we have defined the property __name__ as a

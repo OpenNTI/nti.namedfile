@@ -8,8 +8,6 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-# pylint: disable=E1121
-
 from zope import component
 from zope import interface
 
@@ -52,6 +50,7 @@ class _FileExporter(InterfaceObjectIO):
         self._remove(kwargs, 'name', 'decorate')
         adapter = IInternalObjectExternalizer(context, None)
         if adapter is not None:
+            # pylint: disable=too-many-function-args
             result = adapter.toExternalObject(decorate=False, **kwargs)
         else:
             result = super(_FileExporter, self).toExternalObject(decorate=False, **kwargs)

@@ -8,8 +8,6 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-# pylint: disable=W0201
-
 from zope import component
 from zope import interface
 
@@ -88,6 +86,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
                 parsed.pop(name, None)
 
     def updateFromExternalObject(self, parsed, *args, **kwargs):
+        # pylint: disable=attribute-defined-outside-init
         ext_self = self._ext_replacement()
         if self.is_internal_fileref(parsed):
             # when updating from an external source and either an

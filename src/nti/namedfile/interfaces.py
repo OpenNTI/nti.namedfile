@@ -8,6 +8,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
+# pylint: disable=inherit-non-class
+
 from nti.namedfile import monkey as plonefile_zopefile_patch_on_import
 plonefile_zopefile_patch_on_import.patch()
 
