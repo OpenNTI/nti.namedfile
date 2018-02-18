@@ -58,6 +58,7 @@ setup(
         'nti.property',
         'nti.schema',
         'piexif',
+        'Pillow',
         'six',
         'zope.annotation',
         'zope.component',
