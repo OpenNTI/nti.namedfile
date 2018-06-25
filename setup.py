@@ -66,6 +66,7 @@ setup(
         'zope.deprecation',
         'zope.deferredimport',
         'zope.file',
+        'zope.formlib',
         'zope.interface',
         'zope.location',
         'zope.mimetype',
