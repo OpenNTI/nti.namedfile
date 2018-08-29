@@ -60,7 +60,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
         return self._ext_self
 
     def _ext_all_possible_keys(self):
-        return ()
+        return frozenset()
 
     def _ext_mimeType(self, unused_obj=None):
         return None
@@ -70,7 +70,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
 
     _ext_setattr = staticmethod(setattr)
     _ext_getattr = staticmethod(getattr)
-    
+
     # For symmetry with the other response types,
     # we accept either 'url' or 'value'
 
