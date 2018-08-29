@@ -128,7 +128,7 @@ class NamedFileObjectIO(AbstractDynamicObjectIO):
                 break
         return updated
 
-    def toExternalObject(self, mergeFrom=None, *args, **kwargs):
+    def toExternalObject(self, mergeFrom=None, *args, **kwargs):  # pylint: disable=keyword-arg-before-vararg
         ext_dict = super(NamedFileObjectIO, self).toExternalObject(mergeFrom, *args, **kwargs)
         the_file = self._ext_replacement()
         name = getattr(the_file, 'name', None)
