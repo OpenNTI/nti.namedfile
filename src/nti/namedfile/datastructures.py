@@ -50,7 +50,9 @@ logger = __import__('logging').getLogger(__name__)
 class NamedFileObjectIO(AbstractDynamicObjectIO):
 
     _excluded_out_ivars_ = {'data', 'size', 'contentType'}
-    _excluded_out_ivars_ = _excluded_out_ivars_.union(AbstractDynamicObjectIO._excluded_out_ivars_)
+    _excluded_out_ivars_ = frozenset(
+        _excluded_out_ivars_.union(AbstractDynamicObjectIO._excluded_out_ivars_)
+    )
 
     def __init__(self, ext_self):
         super(NamedFileObjectIO, self).__init__()
