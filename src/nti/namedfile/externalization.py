@@ -37,7 +37,9 @@ logger = __import__('logging').getLogger(__name__)
 class _FileExporter(InterfaceObjectIO):
 
     _excluded_out_ivars_ = {'data', 'size', 'contentType'}
-    _excluded_out_ivars_ = _excluded_out_ivars_.union(InterfaceObjectIO._excluded_out_ivars_)
+    _excluded_out_ivars_ = frozenset(
+        _excluded_out_ivars_.union(InterfaceObjectIO._excluded_out_ivars_)
+    )
 
     _ext_iface_upper_bound = INamedFile
 
