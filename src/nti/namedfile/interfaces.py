@@ -51,6 +51,10 @@ class IFileConstraints(interface.Interface):
                         min=1,
                         required=False)
 
+    max_total_file_size = Int(title=u"Maximum size in bytes for all file attachments",
+                              min=1,
+                              required=False)
+
     max_files = Int(title=u"max attachments files", required=False, default=2)
 
     def is_file_size_allowed(size=None):

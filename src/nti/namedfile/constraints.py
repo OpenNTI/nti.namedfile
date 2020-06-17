@@ -33,6 +33,7 @@ class FileConstraints(object):
 
     max_files = 2
     max_file_size = None
+    max_total_file_size = None
     allowed_extensions = (u'*',)
     allowed_mime_types = (u"*/*",)
 
