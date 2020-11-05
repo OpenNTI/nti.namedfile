@@ -8,7 +8,10 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-import re
+import hashlib
+import os
+
+from slugify import Slugify
 
 from zope import interface
 
@@ -23,7 +26,7 @@ from plone.namedfile.file import NamedImage as PloneNamedImage
 from plone.namedfile.file import NamedBlobFile as PloneNamedBlobFile
 from plone.namedfile.file import NamedBlobImage as PloneNamedBlobImage
 
-from nti.base._compat import text_
+from nti.base._compat import bytes_
 
 from nti.base.interfaces import INamed
 
@@ -50,20 +53,51 @@ def get_context_name(context):
 get_file_name = get_context_name
 
 
-def safe_filename(s):
-    if s:
-        # pylint: disable=broad-except
-        try:
-            s = s.encode("ascii", 'xmlcharrefreplace')
-        except Exception:  # pragma: no cover
-            pass
-        s = re.sub(r'[/<>:;"\\|#?*\s]+', '_', text_(s))
-        s = re.sub(r'&', '_', s)
-        try:
-            s = text_(s)
-        except UnicodeDecodeError:  # pragma: no cover
-            s = s.decode('utf-8')
-    return s
+def trim_filename(filename, max_len):
+    if len(filename) > max_len:
+        trim_by = len(filename) - max_len
+        name, ext = os.path.splitext(filename)
+        if trim_by >= len(name):
+            filename = filename[:-trim_by]
+        else:
+            filename = name[:-trim_by] + ext
+    return filename
+
+
+def hexdigest(data, salt=None):
+    data = bytes_(data)
+    salt = bytes_(salt or b'')
+    hasher = hashlib.sha256()
+    hasher.update(data + salt)
+    return hasher.hexdigest()
+
+
+slugify_filename = Slugify()
+slugify_filename.separator = '_'
+slugify_filename.safe_chars = '_-.'
+
+
+def safe_filename(s, max_len=255, hash_len=10):
+    candidate_name = slugify_filename(s)
+
+    # May need to trim to max_len
+    if len(candidate_name) > max_len:
+        suffix_len = hash_len + 1
+
+        # If we only have enough room for the hash, return that
+        if suffix_len >= max_len:
+            return hexdigest(s)[:max_len]
+
+        trimmed_len = max_len - suffix_len
+        trimmed_name = trim_filename(candidate_name, trimmed_len)
+
+        # Hash using the original name, which is more likely unique
+        suffix = hexdigest(s)[:hash_len]
+
+        name, ext = os.path.splitext(trimmed_name)
+        candidate_name = "%s-%s%s" % (name, suffix, ext)
+
+    return candidate_name
 
 
 class NamedFileMixin(CreatedAndModifiedTimeMixin):

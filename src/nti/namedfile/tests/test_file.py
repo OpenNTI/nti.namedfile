@@ -109,6 +109,24 @@ class TestNamedFile(unittest.TestCase):
         assert_that(get_context_name(Bleach()),
                     is_('ichigo.txt'))
 
-    def test_safe_filename(self):
-        assert_that(safe_filename('/ichigo&.txt'),
-                    is_('_ichigo_.txt'))
+    def test_safe_filename_invalid_chars(self):
+        assert_that(safe_filename('/ichigo&/<>:;"\\|#?* \t.txt'),
+                    is_('ichigo_.txt'))
+
+    def test_safe_filename_exceeds_max(self):
+        assert_that(safe_filename("testing-abc123.tmp", max_len=15, hash_len=4),
+                    is_(r"testin-65e1.tmp"))
+
+        # If length of hash suffix (hash_len + 1) >= max length of base name (max_len - len(ext))
+        assert_that(safe_filename("testing-abc123.tmp", max_len=15, hash_len=10),
+                    is_(r"test-65e1555ce0"))
+
+        # If length of hash suffix (hash_len + 1) >=  > max_len
+        assert_that(safe_filename("testing-abc123.tmp", max_len=15, hash_len=20),
+                    is_("65e1555ce0e3401"))
+
+    def test_safe_filename_expansion_exceeds_max(self):
+        filename = ("." * 254) + u"မိ"
+        expected = ("." * 244) + u"-c4bd484eab"
+        assert_that(safe_filename(filename),
+                    is_(expected))
