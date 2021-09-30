@@ -59,6 +59,7 @@ setup(
         'nti.schema',
         'piexif',
         'Pillow',
+        'awesome-slugify',
         'six',
         'zope.annotation',
         'zope.component',
