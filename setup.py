@@ -51,6 +51,7 @@ setup(
     tests_require=TESTS_REQUIRE,
     install_requires=[
         'setuptools',
+        'awesome-slugify',
         'nti.base',
         'nti.externalization',
         'nti.mimetype',
